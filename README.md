@@ -10,8 +10,9 @@
 Hai! Saya **Dafa Yuda Al Pazri**, seorang **siswa SMK** yang tertarik dengan **web development** dan **teknologi**.  
 Saya senang mempelajari hal baru, membuat website yang sederhana namun modern, dan terus mengembangkan kemampuan saya.  
 Saya percaya bahwa belajar adalah proses tanpa akhir, dan saya ingin ikut berkontribusi di dunia digital.
-<picture>
+<br clear="both">
 
+<picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dafayudaalpazri/dafayudaalpazri/output/pacman-contribution-graph-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/dafayudaalpazri/dafayudaalpazri/output/pacman-contribution-graph.svg">
   <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/dafayudaalpazri/dafayudaalpazri/output/pacman-contribution-graph.svg">
@@ -35,12 +36,14 @@ Saya percaya bahwa belajar adalah proses tanpa akhir, dan saya ingin ikut berkon
 ## GitHub Stats
 
 <p align="center">
-  <img width="48%" src="https://github-readme-stats.vercel.app/api?username=dafayudaalpazri&show_icons=true&theme=react&bg_color=0D1117&hide_border=true&border_radius=10&icon_color=61dafb&title_color=61dafb" />
-  <img width="48%" src="https://github-readme-streak-stats.herokuapp.com?user=dafayudaalpazri&theme=react&hide_border=true&background=0D1117&border_radius=10" />
-</p>
+<br clear="both">
 
-<p align="center">
-  <img width="48%" src="https://github-readme-stats.vercel.app/api/top-langs/?username=dafayudaalpazri&layout=compact&theme=react&bg_color=0D1117&hide_border=true&border_radius=10&title_color=61dafb" />
+<div align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=dafayudaalpazri&hide_title=true&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=dark&locale=en&hide_border=false&order=1&custom_title=Dafaa%20Stats" height="150" alt="stats graph"  />
+</div>
+
+###
+
 </p>
 
 ---
@@ -62,7 +65,3 @@ Saya percaya bahwa belajar adalah proses tanpa akhir, dan saya ingin ikut berkon
 ---
 
 <h4 align="center">Learn • Code • Repeat</h4>
-
-<img src="https://raw.githubusercontent.com/dafayudaalpazri/dafayudaalpazri/output/snake.svg" alt="Snake animation" />
-
-###
