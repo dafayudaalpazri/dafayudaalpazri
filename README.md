@@ -1,3 +1,11 @@
+<br clear="both">
+
+<div>
+  <img style="100%" src="https://capsule-render.vercel.app/api?type=waving&height=100&section=header&reversal=false&fontSize=70&fontColor=FFFFFF&fontAlign=50&fontAlignY=50&stroke=-&descSize=20&descAlign=50&descAlignY=50&theme=cobalt"  />
+</div>
+
+###
+
 ![Banner](./src/banner.png)
 
 <h1 align="center">Hi, I'm Dafa Yuda Al Pazri</h1>
@@ -35,16 +43,13 @@ Saya percaya bahwa belajar adalah proses tanpa akhir, dan saya ingin ikut berkon
 
 ## GitHub Stats
 
-<p align="center">
 <br clear="both">
 
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=dafayudaalpazri&hide_title=true&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=dark&locale=en&hide_border=false&order=1&custom_title=Dafaa%20Stats" height="150" alt="stats graph"  />
+  <img src="https://streak-stats.demolab.com?user=dafayudaalpazri&locale=en&mode=weekly&theme=onedark&hide_border=true&border_radius=1&order=3" height="220" alt="streak graph"  />
 </div>
 
 ###
-
-</p>
 
 ---
 
