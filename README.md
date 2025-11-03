@@ -63,7 +63,9 @@ Saya percaya bahwa belajar adalah proses tanpa akhir, dan saya ingin ikut berkon
     <img src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white"/>
   </a>
 </p>
+<div align="center">
+  <img src="https://count.getloli.com/@:dafayudaalpazri?theme=booru-helltaker&padding=2&offset=0&scale=1&align=center&pixelated=1&darkmode=1"  />
+</div>
 
+###
 ---
-
-<h4 align="center">Learn • Code • Repeat</h4>
