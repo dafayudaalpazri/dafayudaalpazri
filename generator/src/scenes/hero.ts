@@ -39,7 +39,6 @@ const HUNT_START = 0.3;
 const INK = '#141618';
 const GOLD = '#d9b25a';
 const LED = '#ff3b30';
-const CYAN = '#33d6ff';
 const STEEL = '#9aa3ad';
 
 type Box = { x0: number; y0: number; x1: number; y1: number };
@@ -110,7 +109,7 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
 
   // bokeh: out-of-focus lights drifting behind everything
   const bokeh: [number, number, number, string, number][] = [
-    [120, 300, 70, 'bkG', 7.4], [300, 470, 54, 'bkR', 9.2], [470, 110, 46, 'bkS', 8.1], [760, 470, 62, 'bkC', 10.3], [1010, 250, 58, 'bkS', 8.8], [1120, 500, 44, 'bkR', 7.9], [700, 96, 40, 'bkG', 9.6],
+    [120, 300, 70, 'bkG', 7.4], [300, 470, 54, 'bkC', 9.2], [470, 110, 46, 'bkC', 8.1], [760, 470, 62, 'bkG', 10.3], [1010, 250, 58, 'bkC', 8.8], [1120, 500, 44, 'bkG', 7.9],
   ];
   cam.push(g({ class: 'fade', style: 'mix-blend-mode:screen' }, ...bokeh.map(([x, y, r, id, d], i) => g({ class: `bob b${3 + (i % 4)}`, style: `animation-duration:${d}s;animation-delay:-${i * 1.3}s` }, el('circle', { cx: x, cy: y, r, fill: `url(#${id})` })))));
 
@@ -123,7 +122,7 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
   // ---- the black hole --------------------------------------------------------------------------------
   const hole = blackHole({ id: 'bh', cx: CX, cy: CY, R, theme: sky, q: 0.26, rin: 1.5, rout: 3.0, haloReach: 0.38, seed: `hole-${s.login}`, period: 22 });
   defs.push(hole.defs);
-  css.push(hole.css);
+  css.push(hole.css, D.clawdCss());
   cam.push(g({ class: 'emerge' }, hole.back), g({ class: 'emerge' }, hole.front));
   cam.push(el('circle', { class: 'flare', cx: CX, cy: CY, r: R * 1.02, stroke: '#ffffff', 'stroke-width': 7, opacity: 0 }));
   cam.push(el('rect', { class: 'streak', x: CX - 470, y: CY - 1.5, width: 940, height: 3, rx: 1.5, fill: 'url(#flareL)', opacity: 0 }));
@@ -133,7 +132,7 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
   const cap = metrics('archivo').capHeight * NS;
   const nameRun = ts.runWithWidth(s.name.toUpperCase(), { font: 'archivo', size: NS, x: CX, y: CY + cap / 2, anchor: 'middle', tracking: -0.03 });
   defs.push(nameRun.svg.replace('<g ', '<g id="nm" '));
-  cam.push(g({ style: 'mix-blend-mode:screen' }, g({ class: 'cr' }, el('use', { href: '#nm', fill: LED })), g({ class: 'cb' }, el('use', { href: '#nm', fill: CYAN }))));
+  cam.push(g({ style: 'mix-blend-mode:screen' }, g({ class: 'cr' }, el('use', { href: '#nm', fill: GOLD, opacity: 0.8 })), g({ class: 'cb' }, el('use', { href: '#nm', fill: '#fff1cf', opacity: 0.55 }))));
   cam.push(g({ class: 'punch' }, el('use', { href: '#nm', fill: night.text })));
 
   // ---- distractions -------------------------------------------------------------------------------------------
@@ -147,7 +146,7 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
     const lh = 26;
     const top = sy + (sh - 22 - lines.length * lh) / 2 + 22;
     const note =
-      nb(sx, sy, sw, sh, '#ffd84d', { r: 4, shadow: STEEL }) +
+      nb(sx, sy, sw, sh, '#f6dc8f', { r: 4, shadow: '#8a6a24' }) +
       el('rect', { x: sx + sw / 2 - 30, y: sy - 9, width: 60, height: 20, fill: '#fffef4', opacity: 0.75, transform: `rotate(-4 ${sx + sw / 2} ${sy})` }) +
       lines.map((l, i) => ts.run(l, { font: 'caveat', size: 23, x: sx + 17, y: top + i * lh, fill: INK })).join('') +
       ts.run(`— ${s.name}`, { font: 'caveat', size: 17, x: sx + sw - 16, y: sy + sh - 12, anchor: 'end', fill: '#7a5a10' });
@@ -171,56 +170,92 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
     );
     const tx = px + 98;
     let eq = '';
-    for (let i = 0; i < 4; i++) eq += el('rect', { class: `eq eq${i}`, x: px + pw - 46 + i * 8, y: py + 14, width: 5, height: 22, rx: 1.5, fill: i % 2 ? LED : INK });
+    for (let i = 0; i < 4; i++) eq += el('rect', { class: `eq eq${i}`, x: px + pw - 46 + i * 8, y: py + 14, width: 5, height: 22, rx: 1.5, fill: i % 2 ? GOLD : INK });
     const card =
-      nb(px, py, pw, ph, '#f4f2ee', { shadow: GOLD }) +
+      nb(px, py, pw, ph, '#f4f2ee', { shadow: '#8a6a24' }) +
       vinyl +
       ts.run('NOW PLAYING', { font: 'mono500', size: 10, x: tx, y: py + 26, tracking: 0.16, fill: '#6b6860' }) +
       ts.run(extras.song.title, { font: 'archivo', size: 26, x: tx, y: py + 56, tracking: -0.02, fill: INK }) +
       ts.run(extras.song.artist, { font: 'jakarta700', size: 13.5, x: tx, y: py + 74, fill: '#3a3a3a' }) +
       g({ class: 'eqs' }, eq) +
       el('rect', { x: tx, y: py + 84, width: pw - 98 - 18, height: 5, rx: 2.5, fill: '#d6d4cd' }) +
-      el('rect', { class: 'prog', x: tx, y: py + 84, width: pw - 98 - 18, height: 5, rx: 2.5, fill: LED });
+      el('rect', { class: 'prog', x: tx, y: py + 84, width: pw - 98 - 18, height: 5, rx: 2.5, fill: INK });
     debris.push({ svg: card, hunt: box(px + pw / 2, py + ph / 2, pw / 2 + 14, ph / 2 + 14), pull: [18, -10], bob: [7.2, 0.8, 3], op: 0.96, enter: 'slide', delay: 0.3 });
-    debris.push({ svg: D.note(ts, { x: px + 118, y: py + ph + 40, text: 'on repeat', size: 26, rot: -4, fill: '#ff8a7a' }), pull: [14, -6], bob: [6.6, 0.3, 3], enter: 'fade', delay: 0.9 });
+    debris.push({ svg: D.note(ts, { x: px + 118, y: py + ph + 40, text: 'on repeat', size: 26, rot: -4, fill: '#f6dc8f' }), pull: [14, -6], bob: [6.6, 0.3, 3], enter: 'fade', delay: 0.9 });
   }
 
-  // terminal
+  // terminal: a translucent glass pane, tipped toward the hole; its letters peel off and fall in
   {
-    const tx = 32, ty = 446, tw = 262, th = 66;
-    const term =
-      nb(tx, ty, tw, th, '#101114', { shadow: LED, stroke: '#f4f2ee', sw: 2.5 }) +
-      [LED, '#febc2e', '#28c840'].map((c, i) => el('circle', { cx: tx + 16 + i * 12, cy: ty + 14, r: 3.6, fill: c })).join('') +
-      ts.run('$', { font: 'mono500', size: 14, x: tx + 14, y: ty + 47, fill: '#4ade80' }) +
-      ts.run('npm run build', { font: 'mono500', size: 14, x: tx + 30, y: ty + 47, fill: '#f4f2ee' }) +
-      el('rect', { class: 'cur', x: tx + 30 + ts.measure('npm run build', 'mono500', 14) + 6, y: ty + 35, width: 8, height: 15, fill: '#f4f2ee' });
-    debris.push({ svg: term, hunt: box(tx + tw / 2, ty + th / 2, tw / 2 + 14, th / 2 + 14), pull: [-18, 12], bob: [6.2, 0.2, 3], op: 0.96, enter: 'pop', delay: 0.75 });
+    const tx = 40, ty = 444, tw = 250, th = 62;
+    const cmd = 'npm run build';
+    const cmdX = tx + 34;
+    const cmdY = ty + 44;
+    const glass =
+      el('rect', { x: tx, y: ty, width: tw, height: th, rx: 12, fill: '#ffffff', 'fill-opacity': 0.06, stroke: '#f4f2ee', 'stroke-opacity': 0.45, 'stroke-width': 1.5, 'stroke-dasharray': '6 4' }) +
+      el('path', { d: `M${tx + 12} ${ty + 1.5}H${tx + tw - 40}`, stroke: '#ffffff', 'stroke-opacity': 0.35, 'stroke-width': 2, 'stroke-linecap': 'round' }) +
+      [0, 1, 2].map((i) => el('circle', { cx: tx + 16 + i * 12, cy: ty + 14, r: 3.4, fill: '#f4f2ee', opacity: 0.35 })).join('') +
+      ts.run('$', { font: 'mono500', size: 14, x: tx + 16, y: cmdY, fill: GOLD, opacity: 0.85 }) +
+      ts.run(cmd, { font: 'mono500', size: 14, x: cmdX, y: cmdY, fill: '#f4f2ee', opacity: 0.75 }) +
+      el('rect', { class: 'cur', x: cmdX + ts.measure(cmd, 'mono500', 14) + 6, y: ty + 32, width: 8, height: 15, fill: '#f4f2ee', opacity: 0.7 });
+    // ghost letters stretched toward the disk (spaghettification), looping one after another
+    let peel = '';
+    const letters = Array.from('build');
+    const startX = cmdX + ts.measure('npm run ', 'mono500', 14);
+    letters.forEach((ch, i) => {
+      const lx = startX + ts.measure('build'.slice(0, i), 'mono500', 14);
+      peel += g({ class: 'peel', style: `animation-delay:${n(3.2 + i * 0.55, 2)}s` }, ts.run(ch, { font: 'mono500', size: 14, x: lx, y: cmdY, fill: GOLD }));
+    });
+    kf('peel', `0%{opacity:0;transform:translate(0,0) scaleX(1)}8%{opacity:.9}70%{opacity:.5;transform:translate(${CX - 230 - startX}px,${CY + 60 - cmdY}px) scaleX(3.2) scaleY(.4)}100%{opacity:0;transform:translate(${CX - 150 - startX}px,${CY + 30 - cmdY}px) scaleX(5) scaleY(.15)}`);
+    css.push(`.peel{opacity:0;transform-box:fill-box;transform-origin:left center;animation:peel 2.8s cubic-bezier(.5,0,.9,.6) infinite}`);
+    debris.push({ svg: g({ transform: `skewX(-6) translate(${n(ty * 0.105)} 0)` }, glass) + peel, hunt: box(tx + tw / 2, ty + th / 2, tw / 2 + 14, th / 2 + 14), pull: [-18, 12], bob: [6.2, 0.2, 3], op: 0.95, enter: 'fade', delay: 0.75 });
   }
 
   // notification
   {
-    const ping = D.pill(ts, { x: 40, y: 404, text: 'new notification', size: 14.5, fill: '#ffffff', ink: INK, dot: '#ff5cad', stroke: INK });
-    const shadow = el('rect', { x: 45, y: 404 - ping.h / 2 + 5, width: ping.w, height: ping.h, rx: ping.h / 2, fill: GOLD });
-    debris.push({ svg: g({ transform: `rotate(-4 ${n(40 + ping.w / 2)} 404)` }, shadow, ping.svg), pull: [-14, 8], bob: [5.8, 0.4, 4], op: 0.9, enter: 'pop', delay: 1.0 });
+    const ping = D.pill(ts, { x: 44, y: 400, text: 'new notification', size: 14.5, fill: '#f4f2ee', ink: INK, dot: GOLD, stroke: INK });
+    debris.push({ svg: g({ transform: `rotate(-4 ${n(44 + ping.w / 2)} 400)` }, ping.svg), pull: [-14, 8], bob: [5.8, 0.4, 4], op: 0.88, enter: 'pop', delay: 1.0 });
   }
 
-  // elevator LED panel (a nod to the profile photo)
-  {
-    const lx = 1046, ly = 386, lw = 110, lh = 62;
-    const led =
-      nb(lx, ly, lw, lh, '#0e0f11', { shadow: STEEL, stroke: '#c9ccd1', sw: 2.5 }) +
-      // one cell per digit, an unlit 8 under each lit digit, like a real segment display
-      [0, 1].map((i) => ts.run('8', { font: 'anton', size: 40, x: lx + 28 + i * 24, y: ly + 50, anchor: 'middle', fill: '#3a1412' }) + ts.run('1', { font: 'anton', size: 40, x: lx + 28 + i * 24, y: ly + 50, anchor: 'middle', fill: LED })).join('') +
-      el('path', { class: 'ledup', d: `M${lx + 82} ${ly + 22}l10 14h-20Z`, fill: LED }) +
-      el('path', { d: `M${lx + 72} ${ly + 44}h20`, stroke: '#3a1412', 'stroke-width': 3, 'stroke-linecap': 'round' });
-    debris.push({ svg: led, pull: [14, 8], bob: [7.9, 1.1, 3], op: 0.95, enter: 'pop', delay: 1.15 });
+  // ---- the hole pulls on everything ---------------------------------------------------------------------------
+  // tidal streams: faint dashed light running from each card into the disk
+  const streams: [number, number, number, number][] = [
+    [238, 150, CX - 300, CY - 20],
+    [890, 120, CX + 290, CY - 30],
+    [290, 470, CX - 260, CY + 70],
+    [960, 330, CX + 330, CY + 10],
+  ];
+  for (const [x0, y0, x1, y1] of streams) {
+    const d = `M${x0} ${y0}Q${n((x0 + x1) / 2 + (x1 > x0 ? 40 : -40))} ${n((y0 + y1) / 2 + 60)} ${x1} ${y1}`;
+    cam.push(el('path', { class: 'tide', d, pathLength: 100, stroke: GOLD, 'stroke-opacity': 0.4, 'stroke-width': 1.6, 'stroke-dasharray': '1 7', 'stroke-linecap': 'round' }));
   }
+  css.push(`.tide{animation:tide 2.4s linear infinite}@keyframes tide{to{stroke-dashoffset:-8}}`);
+  // infalling particles: each spirals in on a squashed orbit and fades as it crosses the disk
+  const fall: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    const r0 = 300 + (i % 4) * 50;
+    const dur = 5 + (i % 5) * 1.3;
+    fall.push(
+      g(
+        { transform: `translate(${CX} ${CY}) scale(1 .3)` },
+        g({ class: 'swirl', style: `animation-duration:${n(dur)}s;animation-delay:-${n(i * 0.83, 2)}s` }, g({ class: 'sink', style: `animation-duration:${n(dur)}s;animation-delay:-${n(i * 0.83, 2)}s` }, el('circle', { cx: r0, cy: 0, r: i % 3 ? 2.2 : 3.2, fill: i % 4 ? '#fff1cf' : GOLD, transform: 'scale(1 3.3)' }))),
+      ),
+    );
+  }
+  // particles pass behind the shadow, never across it
+  defs.push(el('mask', { id: 'nohole', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, el('rect', { width: W, height: H, fill: '#fff' }), el('circle', { cx: CX, cy: CY, r: R * 1.02, fill: '#000' })));
+  cam.push(g({ class: 'fade', mask: 'url(#nohole)' }, ...fall));
+  css.push(`.swirl{animation:swirl 6s linear infinite}@keyframes swirl{to{transform:rotate(-720deg)}}`, `.sink{animation:sink 6s cubic-bezier(.55,0,1,.6) infinite}@keyframes sink{0%{transform:translateX(0);opacity:0}10%{opacity:1}85%{opacity:.9}100%{transform:translateX(-240px);opacity:0}}`);
+  // gravitational waves: a ripple leaves the horizon every few seconds
+  for (let i = 0; i < 2; i++) cam.push(el('ellipse', { class: 'wave', style: `animation-delay:${n(3 + i * 2.5, 1)}s`, cx: CX, cy: CY, rx: R * 1.1, ry: R * 1.1, stroke: '#fff4d8', 'stroke-width': 2, opacity: 0 }));
+  css.push(`.wave{transform-origin:${CX}px ${CY}px;animation:gw 5s ease-out infinite}@keyframes gw{0%{opacity:.5;transform:scale(1)}100%{opacity:0;transform:scale(2.6,1.5)}}`);
 
   // critters and marks
   debris.push({ svg: D.ghost(sky, { x: 922, y: 304, size: 76, rot: -4 }, { stretch: 1 }), hunt: box(918, 302, 58, 42), pull: [30, 4], bob: [6.8, 1.2, 4], enter: 'pop', delay: 0.9 });
   debris.push({ svg: D.tabCritter(sky, { x: 330, y: 104, size: 70, rot: -9 }), pull: [-12, -10], bob: [6.5, 0, 5], enter: 'pop', delay: 1.3 });
   debris.push({ svg: D.note(ts, { x: 935, y: 508, text: 'one more idea…', size: 28, rot: -5, fill: t.accentHi, underline: true }), pull: [14, 16], bob: [7.6, 0.2, 3], enter: 'fade', delay: 1.4 });
   debris.push({ svg: D.hook(sky, { x: 905, y: 466, size: 50, rot: -6, sw: 3 }, t.accentHi), pull: [12, 12], bob: [7.6, 0.2, 3], enter: 'fade', delay: 1.4 });
+  // cameo: Clawd riding the notification pill
+  debris.push({ svg: D.cameo(sky, 196, 368, 44), pull: [-12, 8], bob: [5.8, 0.4, 4], op: 0.95, enter: 'pop', delay: 1.6 });
   debris.push({ svg: D.crown(sky, { x: 780, y: 92, size: 44, rot: 14, sw: 2.8 }), pull: [10, -12], bob: [8.4, 1.5, 4], enter: 'pop', delay: 1.1 });
   debris.push({ svg: D.sparkle(sky, { x: 452, y: 82, size: 28, sw: 2.2 }), pull: [-10, -10], bob: [5.2, 0.6, 3], enter: 'pop', delay: 1.2 });
   debris.push({ svg: D.sparkle(sky, { x: 1120, y: 250, size: 22, sw: 2 }), pull: [10, 8], bob: [6.1, 0.9, 3], enter: 'pop', delay: 1.25 });

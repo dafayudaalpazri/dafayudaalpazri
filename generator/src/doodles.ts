@@ -191,6 +191,45 @@ export function eyeball(t: Theme, p: Place): string {
   );
 }
 
+/**
+ * Clawd, Claude's mascot, as session-story's engine draws him (kit/clawd.js): a blocky 10 × 6 body, slit eyes at
+ * (±2.5u, -6u), two arm nubs, four stubby legs, clay #D97757. Here u = 8 in the 100 box, ground at y 88.
+ * `waveCls` goes on the right arm nub, `blinkCls` on the eyes.
+ */
+export function clawd(t: Theme, p: Place, o: { waveCls?: string; blinkCls?: string; heart?: boolean } = {}): string {
+  const CLAY = '#D97757';
+  const CLAY_DK = '#A84D33';
+  const EYE = '#2B2233';
+  const line = '#141618';
+  const body = 'M10 24H90V72H10Z';
+  const legs = [-4, -2, 1, 3].map((lx) => `M${50 + lx * 8} 72h8v16h-8Z`);
+  const armL = 'M10 44H2V58H10Z';
+  const armR = 'M90 44H98V58H90Z';
+  return place(
+    p,
+    (sw) =>
+      legs.map((d, i) => el('path', { d, fill: i === 0 || i === 3 ? CLAY_DK : CLAY, stroke: line, 'stroke-width': n(sw * 0.8) })).join('') +
+      el('path', { d: armL, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) }) +
+      g({ class: o.waveCls }, el('path', { d: armR, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) })) +
+      el('path', { d: body, fill: CLAY, stroke: line, 'stroke-width': n(sw) }) +
+      el('path', { d: 'M14 28H86', stroke: '#F2A283', 'stroke-width': n(sw * 0.7), 'stroke-linecap': 'round', opacity: 0.8 }) +
+      g({ class: o.blinkCls }, el('rect', { x: 26, y: 32, width: 8, height: 16, fill: EYE }), el('rect', { x: 66, y: 32, width: 8, height: 16, fill: EYE })) +
+      (o.heart ? el('path', { d: 'M50 14c-3-6-12-4-10 3 1 3 6 6 10 9 4-3 9-6 10-9 2-7-7-9-10-3Z', fill: '#ff5c7a', stroke: line, 'stroke-width': n(sw * 0.6) }) : ''),
+    { t, d: [body, armL, armR, ...legs] },
+  );
+}
+
+/** Motion for Clawd cameos: put `cwave` on the arm, `cblink` on the eyes, `chop` on a wrapper. */
+export function clawdCss(): string {
+  return (
+    `.cwave{transform-box:fill-box;transform-origin:0 100%;animation:cwv 2.6s ease-in-out infinite}@keyframes cwv{0%,50%,100%{transform:rotate(0)}65%,85%{transform:rotate(-26deg)}75%{transform:rotate(-8deg)}}` +
+    `.cblink{transform-box:fill-box;transform-origin:center;animation:cbl 4.6s steps(1) infinite}@keyframes cbl{0%,94%{transform:none}95%,98%{transform:scaleY(.15)}}` +
+    `.chop{animation:chop 3.4s ease-in-out infinite}@keyframes chop{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-5px)}}`
+  );
+}
+export const cameo = (t: Theme, x: number, y: number, size: number, extra: { heart?: boolean } = {}) =>
+  g({ class: 'chop' }, clawd(t, { x, y, size, sw: Math.max(2.4, size * 0.05) }, { waveCls: 'cwave', blinkCls: 'cblink', ...extra }));
+
 // ---------------------------------------------------------------------------------------------------
 // marks
 

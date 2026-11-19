@@ -15,7 +15,7 @@ export interface SectionSpec {
   index: string;
   title: string;
   note: string;
-  doodle: 'voidling' | 'spiral' | 'orbit' | 'eye' | 'plane';
+  doodle: 'voidling' | 'spiral' | 'orbit' | 'eye' | 'plane' | 'clawd';
 }
 
 export function section(t: Theme, s: SectionSpec): string {
@@ -65,20 +65,25 @@ export function section(t: Theme, s: SectionSpec): string {
         ? D.voidling(t, { ...p, size: 128 }, { wave: true, waveCls: 'wave' })
         : s.doodle === 'orbit'
           ? D.orbitGlyph(t, { ...p, size: 150, sw: 4.6 }, { bodies: 3, seed: 'orbits' })
+          : s.doodle === 'clawd'
+            ? D.clawd(t, { ...p, size: 104, sw: 3.6 }, { waveCls: 'wave', blinkCls: 'blink' })
           : s.doodle === 'eye'
             ? D.eyeball(t, { ...p, size: 116 })
             : D.plane(t, { ...p, size: 96 });
     parts.push(g({ class: 'float' }, doodle));
+    if (s.doodle === 'orbit') parts.push(D.cameo(t, dx - 150, 58, 40));
   }
 
   parts.push(el('path', { d: `M24 ${H - 1.5}H${W - 24}`, stroke: rule, 'stroke-width': 1.5 }));
 
   const css = [
+    D.clawdCss(),
     // a zero-length dash with a round cap is a dot; sliding the offset by the path length carries it along
     `.ride{animation:ride 9s cubic-bezier(.45,0,.55,1) infinite}@keyframes ride{0%{stroke-dashoffset:0}62%,100%{stroke-dashoffset:-1000}}`,
     `.float{animation:fl 6s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-4px)}}`,
     `.spin{transform-box:fill-box;transform-origin:center;animation:sp 24s linear infinite}@keyframes sp{to{transform:rotate(-360deg)}}`,
     `.tilt{transform-box:fill-box;transform-origin:center;animation:tilt 5s ease-in-out infinite}@keyframes tilt{0%,70%,100%{transform:rotate(0)}78%{transform:rotate(-4deg)}86%{transform:rotate(3deg)}}`,
+    `.blink{transform-box:fill-box;transform-origin:center;animation:bl 4.5s steps(1) infinite}@keyframes bl{0%,94%{transform:none}95%,98%{transform:scaleY(.15)}}`,
     `.tw{animation:tw 3.6s steps(1) infinite}.tw1{animation-delay:-1.7s}@keyframes tw{50%{opacity:.35}}`,
     `.wave{transform-box:fill-box;transform-origin:100% 100%;animation:wv 3.2s ease-in-out infinite}@keyframes wv{0%,60%,100%{transform:rotate(0)}70%,90%{transform:rotate(-14deg)}80%{transform:rotate(10deg)}}`,
   ].join('');

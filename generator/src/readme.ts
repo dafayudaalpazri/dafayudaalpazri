@@ -120,7 +120,7 @@ export function readme(b: Built, s: Stats, config: ProfileConfig): string {
   out.push('</details>');
   out.push('');
 
-  out.push(center(picture(b.closing, `Thanks for falling in. See you beyond the horizon. The Singularity waves goodbye while a paper plane flies off.`)));
+  out.push(center(picture(b.closing, `Thanks for falling in. See you beyond the horizon. Clawd, Claude's mascot, waves next to a small black hole.`)));
   out.push('');
   out.push(
     `<p align="center"><sub>Original artwork, drawn as SVG by the generator in <a href="./generator">/generator</a> from public GitHub data (last update ${s.updated}). Motion stops if your system asks for reduced motion.</sub></p>`,

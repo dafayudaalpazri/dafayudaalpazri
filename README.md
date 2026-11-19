@@ -142,7 +142,7 @@ I believe curiosity matters more than recognition. Too much attention can make a
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/closing/end-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/closing/end-light.svg">
-  <img alt="Thanks for falling in. See you beyond the horizon. The Singularity waves goodbye while a paper plane flies off." src="./assets/closing/end-light.svg" width="100%">
+  <img alt="Thanks for falling in. See you beyond the horizon. Clawd, Claude's mascot, waves next to a small black hole." src="./assets/closing/end-light.svg" width="100%">
 </picture>
 </p>
 

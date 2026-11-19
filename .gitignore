@@ -5,3 +5,7 @@ hightable-pay/
 
 # dependencies of the artwork generator (restored by `npm ci` in /generator)
 generator/node_modules/
+
+# agent skills used for the redesign (html-demo, session-story); reinstall with `npx skills add ...`
+.claude/
+skills-lock.json

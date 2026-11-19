@@ -61,6 +61,10 @@ export function projectCard(t: Theme, repo: Repo, index: number, blurb: string |
 
   const sys = orbitSystem(t, 110, 100, repo);
   body.push(sys.svg);
+  if (index === 0) {
+    body.push(D.cameo(t, 1128, 166, 38));
+    css.push(D.clawdCss());
+  }
   css.push(sys.css, `@keyframes rot{to{transform:rotate(360deg)}}@keyframes crot{to{transform:rotate(-360deg)}}`);
 
   const X = 214;
