@@ -29,9 +29,18 @@ export function section(t: Theme, s: SectionSpec): string {
 
   const parts: string[] = [];
   const base = 92;
-  const num = ts.runWithWidth(s.index, { font: 'anton', size: 78, x: 24, y: base, fill: accent });
-  parts.push(num.svg);
-  const tx = 24 + num.width + 22;
+  // the index sits in a neo-brutalist gold block with a hard shadow
+  const nw = ts.measure(s.index, 'anton', 62) + 30;
+  const bx = 24, byy = 22, bh = 80;
+  parts.push(
+    g(
+      { class: 'tilt' },
+      el('rect', { x: bx + 6, y: byy + 6, width: nw, height: bh, rx: 10, fill: dark ? '#9aa3ad' : '#141618' }),
+      el('rect', { x: bx, y: byy, width: nw, height: bh, rx: 10, fill: '#d9b25a', stroke: '#141618', 'stroke-width': 3 }),
+      ts.run(s.index, { font: 'anton', size: 62, x: bx + nw / 2, y: byy + 66, anchor: 'middle', fill: '#141618' }),
+    ),
+  );
+  const tx = bx + nw + 28;
   const title = ts.runWithWidth(s.title.toUpperCase(), { font: 'archivo', size: 54, x: tx, y: base - 4, tracking: -0.035, fill: text });
   parts.push(title.svg);
   parts.push(D.note(ts, { x: tx + 4, y: base + 38, text: s.note, size: 29, rot: -2.5, fill: noteC }));
@@ -69,6 +78,7 @@ export function section(t: Theme, s: SectionSpec): string {
     `.ride{animation:ride 9s cubic-bezier(.45,0,.55,1) infinite}@keyframes ride{0%{stroke-dashoffset:0}62%,100%{stroke-dashoffset:-1000}}`,
     `.float{animation:fl 6s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-4px)}}`,
     `.spin{transform-box:fill-box;transform-origin:center;animation:sp 24s linear infinite}@keyframes sp{to{transform:rotate(-360deg)}}`,
+    `.tilt{transform-box:fill-box;transform-origin:center;animation:tilt 5s ease-in-out infinite}@keyframes tilt{0%,70%,100%{transform:rotate(0)}78%{transform:rotate(-4deg)}86%{transform:rotate(3deg)}}`,
     `.tw{animation:tw 3.6s steps(1) infinite}.tw1{animation-delay:-1.7s}@keyframes tw{50%{opacity:.35}}`,
     `.wave{transform-box:fill-box;transform-origin:100% 100%;animation:wv 3.2s ease-in-out infinite}@keyframes wv{0%,60%,100%{transform:rotate(0)}70%,90%{transform:rotate(-14deg)}80%{transform:rotate(10deg)}}`,
   ].join('');

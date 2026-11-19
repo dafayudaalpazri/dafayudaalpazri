@@ -11,7 +11,7 @@ import { n, el, g, svgDoc } from '../svg.ts';
 import { Typesetter } from '../type.ts';
 import { blackHole } from '../blackhole.ts';
 import * as D from '../doodles.ts';
-import { panel, panelColors } from '../parts.ts';
+import { panel, panelClip, panelColors } from '../parts.ts';
 import { MONTHS, WEEKDAYS, fmtDate, fmtMonth, type Stats } from '../stats.ts';
 import type { Theme } from '../tokens.ts';
 
@@ -32,8 +32,8 @@ export function telemetry(t: Theme, s: Stats): string {
   const accentText = dark ? t.accent : t.accentDeep;
   const defs: string[] = [];
   const css: string[] = [];
-  const body: string[] = [panel(t, W, H)];
-  defs.push(el('clipPath', { id: 'p' }, el('rect', { x: 1.5, y: 1.5, width: W - 3, height: H - 3, rx: 27 })));
+  const body: string[] = [panel(t, W, H, 22, { fill: dark ? '#15171a' : '#f4f3f0' })];
+  defs.push(panelClip('p', W, H));
   const inner: string[] = [];
   inner.push(D.starfield(t, { w: W, h: H, count: dark ? 70 : 34, seed: 'tele', avoid: [{ cx: CX, cy: CY, r: 260 }], clear: [[620, 40, W - 30, H - 20]], opacity: dark ? 0.35 : 0.2 }));
 
@@ -52,6 +52,7 @@ export function telemetry(t: Theme, s: Stats): string {
       const len = 16 + (d.count / max) * (R1 - R0 - 16);
       spikes.push(el('path', { d: `M${n(CX + cos * (R0 - 2))} ${n(CY + sin * (R0 - 2))}L${n(CX + cos * (R0 + len))} ${n(CY + sin * (R0 + len))}`, stroke: accent, 'stroke-width': 5, 'stroke-linecap': 'round' }));
       spikes.push(el('circle', { cx: CX + cos * (R0 + len + 9), cy: CY + sin * (R0 + len + 9), r: 3, fill: dark ? t.accentHi : t.accentDeep }));
+      spikes.push(el('circle', { class: 'ping', style: `animation-delay:-${n((i % 7) * 0.4, 1)}s`, cx: CX + cos * (R0 + len + 9), cy: CY + sin * (R0 + len + 9), r: 3, stroke: '#ff3b30', 'stroke-width': 2, opacity: 0 }));
     }
   });
   inner.push(el('path', { d: quiet, stroke: c.text, 'stroke-opacity': dark ? 0.34 : 0.4, 'stroke-width': 1.3, 'stroke-linecap': 'round' }));
@@ -178,7 +179,11 @@ export function telemetry(t: Theme, s: Stats): string {
   inner.push(ts.run(`PUBLIC GITHUB DATA · UPDATED ${s.updated}`, { font: 'mono500', size: 10.5, x: W - 44, y: H - 30, anchor: 'end', tracking: 0.12, fill: c.faint }));
 
   body.push(g({ 'clip-path': 'url(#p)' }, ...inner));
-  css.push(`.scan{transform-origin:${CX}px ${CY}px;animation:scan 14s linear infinite}@keyframes scan{to{transform:rotate(360deg)}}`);
+  css.push(
+    `.scan{transform-origin:${CX}px ${CY}px;animation:scan 14s linear infinite}@keyframes scan{to{transform:rotate(360deg)}}`,
+    // each active day sends out a radar ping
+    `.ping{transform-box:fill-box;transform-origin:center;animation:ping 2.8s ease-out infinite}@keyframes ping{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(4)}}`,
+  );
 
   const label = `Telemetry, ${fmtDate(s.windowStart)} to ${fmtDate(s.windowEnd)}: ${s.total} contributions on ${s.activeDays} active days. Longest streak ${s.longestStreak} days. Biggest day ${s.biggestDay ? `${s.biggestDay.count} on ${fmtDate(s.biggestDay.date)}` : 'none'}. Busiest month ${s.busiestMonth ? fmtMonth(s.busiestMonth.month) : 'none'}. ${s.publicRepos} public repos, on GitHub since ${s.since}. Languages: ${s.languages.slice(0, 4).map((l) => `${l.name} ${Math.round(l.share * 100)}%`).join(', ')}.`;
   return svgDoc({ width: W, height: H, label, style: css.join(''), defs: defs.join('') + ts.defs(), body: body.join('') });

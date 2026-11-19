@@ -309,7 +309,7 @@ export function sticker(
 /** a pill chip: rounded, with a label and an optional leading dot */
 export function pill(
   ts: Typesetter,
-  o: { x: number; y: number; text: string; size?: number; fill: string; ink: string; stroke?: string; font?: FontKey; dot?: string; anchor?: 'start' | 'middle'; cls?: string; h?: number; padX?: number; icon?: (x: number, y: number, s: number) => string },
+  o: { x: number; y: number; text: string; size?: number; fill: string; ink: string; stroke?: string; font?: FontKey; dot?: string; anchor?: 'start' | 'middle'; cls?: string; h?: number; padX?: number; icon?: (x: number, y: number, s: number) => string; shadow?: string },
 ): { svg: string; w: number; h: number } {
   const size = o.size ?? 15;
   const font = o.font ?? 'jakarta700';
@@ -320,7 +320,8 @@ export function pill(
   const w = tw + padX * 2 + lead;
   const x0 = o.anchor === 'middle' ? o.x - w / 2 : o.x;
   const cy = o.y;
-  let inner = el('rect', { x: x0, y: cy - h / 2, width: w, height: h, rx: h / 2, fill: o.fill, stroke: o.stroke, 'stroke-width': o.stroke ? 1.5 : undefined });
+  let inner = o.shadow ? el('rect', { x: x0 + 3.5, y: cy - h / 2 + 3.5, width: w, height: h, rx: h / 2, fill: o.shadow }) : '';
+  inner += el('rect', { x: x0, y: cy - h / 2, width: w, height: h, rx: h / 2, fill: o.fill, stroke: o.stroke, 'stroke-width': o.stroke ? (o.shadow ? 2.5 : 1.5) : undefined });
   if (o.icon) inner += o.icon(x0 + padX + size * 0.42, cy, size * 0.95);
   else if (o.dot) inner += el('circle', { cx: x0 + padX + size * 0.3, cy, r: size * 0.3, fill: o.dot });
   inner += ts.run(o.text, { font, size, x: x0 + padX + lead, y: cy + size * 0.36, fill: o.ink });

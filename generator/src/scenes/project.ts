@@ -55,7 +55,9 @@ export function projectCard(t: Theme, repo: Repo, index: number, blurb: string |
   const c = panelColors(t);
   const dark = t.name === 'dark';
   const css: string[] = [];
-  const body: string[] = [panel(t, W, H, 26)];
+  const LIGHT = ['#ffffff', '#f6dc8f', '#dde0e4', '#ecebe7'];
+  const SHADOWS = ['#d9b25a', '#ff3b30', '#9aa3ad', '#f6dc8f'];
+  const body: string[] = [panel(t, W, H, 20, dark ? { fill: '#1b1e22', shadow: SHADOWS[index % 4] } : { fill: LIGHT[index % 4] })];
 
   const sys = orbitSystem(t, 110, 100, repo);
   body.push(sys.svg);
@@ -92,7 +94,10 @@ export function projectCard(t: Theme, repo: Repo, index: number, blurb: string |
     ts.run('View repo', { font: 'jakarta800', size: 16, x: bx + 22, y: 105.8, fill: bink }),
     icon('arrow', bx + 22 + tw + 12 + 9, 100, 18, bink, 2.6),
   );
-  if (repo.homepage) body.push(D.sticker(ts, t, { x: bx - 58, y: 70, text: 'Live', size: 22, rot: -8, fill: t.accentHi, seed: repo.name }));
+  if (repo.homepage) {
+    body.push(g({ class: 'live' }, D.sticker(ts, t, { x: bx - 58, y: 70, text: 'Live', size: 22, rot: -8, fill: index % 4 === 1 && !dark ? '#ffffff' : t.accentHi, seed: repo.name })));
+    css.push(`.live{transform-box:fill-box;transform-origin:center;animation:live 3.2s ease-in-out infinite}@keyframes live{0%,80%,100%{transform:rotate(0)}86%{transform:rotate(-6deg) scale(1.06)}93%{transform:rotate(4deg)}}`);
+  }
 
   const label = `${repo.name}${blurb ? `: ${blurb}` : ''} ${repo.language ? `Language: ${repo.language}.` : ''} Updated ${fmtMonth(repo.pushedAt)}.${repo.homepage ? ` Live at ${repo.homepage}.` : ''}`;
   return svgDoc({ width: W, height: H, label, style: css.join(''), defs: ts.defs(), body: body.join('') });

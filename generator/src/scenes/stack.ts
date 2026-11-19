@@ -8,7 +8,7 @@ import { n, el, g, svgDoc } from '../svg.ts';
 import { Typesetter } from '../type.ts';
 import { blackHole } from '../blackhole.ts';
 import * as D from '../doodles.ts';
-import { panel, panelColors, brand } from '../parts.ts';
+import { panel, panelClip, panelColors, brand } from '../parts.ts';
 import type { Theme } from '../tokens.ts';
 import type { Stats } from '../stats.ts';
 import type { StackItem } from '../../profile.config.ts';
@@ -37,8 +37,8 @@ export function stackPanel(t: Theme, s: Stats, stack: StackItem[]): string {
   const dark = t.name === 'dark';
   const defs: string[] = [];
   const css: string[] = [];
-  const body: string[] = [panel(t, W, H)];
-  defs.push(el('clipPath', { id: 'p' }, el('rect', { x: 1.5, y: 1.5, width: W - 3, height: H - 3, rx: 27 })));
+  const body: string[] = [panel(t, W, H, 22, { fill: dark ? '#1b1e22' : '#dde0e4', shadow: dark ? '#9aa3ad' : '#141618' })];
+  defs.push(panelClip('p', W, H));
 
   const inner: string[] = [];
   inner.push(D.starfield(t, { w: W, h: H, count: dark ? 60 : 34, seed: 'stack', avoid: [{ cx: 190, cy: 210, r: 120 }], clear: [[360, 60, 1120, 345], [780, 345, 1100, 410]], twinkle: 0, opacity: dark ? 0.4 : 0.22 }));
@@ -64,7 +64,7 @@ export function stackPanel(t: Theme, s: Stats, stack: StackItem[]): string {
     lanesSvg.push(el('path', { class: 'flow', d, pathLength: 100, stroke: t.accent, 'stroke-width': 2.4, 'stroke-linecap': 'round', 'stroke-dasharray': '2 10', style: `animation-duration:${n(2.6 + i * 0.5)}s` }));
     chips.push(ts.run(lane.label.toUpperCase(), { font: 'mono500', size: 12, x: X0, y: y - 32, tracking: 0.16, fill: c.faint }));
     let x = X0;
-    for (const item of lane.items) {
+    for (const [k, item] of lane.items.entries()) {
       const p = D.pill(ts, {
         x,
         y,
@@ -74,11 +74,12 @@ export function stackPanel(t: Theme, s: Stats, stack: StackItem[]): string {
         padX: 17,
         fill: c.chip,
         ink: c.text,
-        stroke: dark ? c.chipEdge : c.chipEdge,
+        stroke: dark ? '#e9e5db' : '#141618',
+        shadow: dark ? (k % 3 === 0 ? '#ff3b30' : '#d9b25a') : '#141618',
         dot: item.icon ? undefined : t.accent,
         icon: item.icon ? (ix, iy, sz) => brand(item.icon!, ix + 2, iy, sz * 1.05, dark ? t.accentHi : '#141618') : undefined,
       });
-      chips.push(p.svg);
+      chips.push(g({ class: 'chip', style: `animation-delay:-${n((i * 1.3 + k * 0.7) % 4.2, 2)}s` }, p.svg));
       x += p.w + 12;
     }
   });
@@ -91,7 +92,7 @@ export function stackPanel(t: Theme, s: Stats, stack: StackItem[]): string {
   inner.push(D.hook(t, { x: 872, y: 372, size: 40, rot: 20, sw: 2.6 }, dark ? t.accentHi : t.accentDeep));
 
   body.push(g({ 'clip-path': 'url(#p)' }, ...inner));
-  css.push(`.flow{animation:flow 3s linear infinite}@keyframes flow{to{stroke-dashoffset:-12}}`);
+  css.push(`.flow{animation:flow 3s linear infinite}@keyframes flow{to{stroke-dashoffset:-12}}`, `.chip{animation:chip 4.2s ease-in-out infinite}@keyframes chip{50%{transform:translateY(-3px)}}`);
 
   const label = `Accretion: what my public projects are built from. ${L.map((l) => `${l.label}: ${l.items.map((x) => x.name).join(', ')}`).join('. ')}.`;
   return svgDoc({ width: W, height: H, label, style: css.join(''), defs: defs.join('') + ts.defs(), body: body.join('') });

@@ -13,9 +13,29 @@ export function panelColors(t: Theme) {
     : { bg: '#ecebe7', bg2: '#f4f3f0', edge: '#d6d4cd', text: '#141618', text2: '#3a3a3a', faint: '#7c796f', rule: '#d3d1ca', chip: '#ffffff', chipEdge: '#141618' };
 }
 
-export function panel(t: Theme, w: number, h: number, r = 28): string {
+/** Neo-brutalist hard shadow offset: panels are drawn 8 px smaller than the canvas and the shadow fills the rest. */
+export const SHADOW = 8;
+
+export interface PanelStyle {
+  /** panel fill; defaults to the theme's panel colour */
+  fill?: string;
+  /** hard shadow colour; defaults to ink on light, gold on dark */
+  shadow?: string;
+}
+
+/** A neo-brutalist panel: flat fill, thick outline (ink on light, warm white on dark), hard offset shadow. */
+export function panel(t: Theme, w: number, h: number, r = 22, s: PanelStyle = {}): string {
   const c = panelColors(t);
-  return el('rect', { x: 0.75, y: 0.75, width: w - 1.5, height: h - 1.5, rx: r, fill: c.bg, stroke: c.edge, 'stroke-width': 1.5 });
+  const dark = t.name === 'dark';
+  return (
+    el('rect', { x: SHADOW, y: SHADOW, width: w - SHADOW, height: h - SHADOW, rx: r, fill: s.shadow ?? (dark ? '#d9b25a' : '#141618') }) +
+    el('rect', { x: 1.5, y: 1.5, width: w - SHADOW - 3, height: h - SHADOW - 3, rx: r, fill: s.fill ?? c.bg, stroke: dark ? '#e9e5db' : '#141618', 'stroke-width': 3 })
+  );
+}
+
+/** clip path matching the inside of panel() */
+export function panelClip(id: string, w: number, h: number, r = 22): string {
+  return el('clipPath', { id }, el('rect', { x: 3, y: 3, width: w - SHADOW - 6, height: h - SHADOW - 6, rx: r - 1.5 }));
 }
 
 /** A simple-icons brand mark (24 × 24) placed at (x, y) centre with size s. CC0 icon data. */

@@ -50,7 +50,7 @@ export function readme(b: Built, s: Stats, config: ProfileConfig): string {
     center(
       picture(
         b.hero,
-        `${s.name} (@${s.login}): ${s.tagline}. Title card: an autofocus HUD hunts through drifting tabs, a notification and a stray idea, then locks onto the name inside a black hole's shadow.`,
+        `${s.name} (@${s.login}): ${s.tagline}. Title card: an autofocus HUD hunts through floating cards${config.quote ? ` (a sticky note: "${config.quote}"` : ' ('}${config.song ? `${config.quote ? ', ' : ''}now playing ${config.song.title} by ${config.song.artist}` : ''}), then locks onto the name inside a black hole's shadow.`,
       ),
     ),
   );

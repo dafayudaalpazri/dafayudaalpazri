@@ -4,7 +4,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/hero/event-horizon-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/hero/event-horizon-light.svg">
-  <img alt="Dapaa (@dafayudaalpazri): Full-stack developer &amp; digital product builder. Title card: an autofocus HUD hunts through drifting tabs, a notification and a stray idea, then locks onto the name inside a black hole's shadow." src="./assets/hero/event-horizon-light.svg" width="100%">
+  <img alt="Dapaa (@dafayudaalpazri): Full-stack developer &amp; digital product builder. Title card: an autofocus HUD hunts through floating cards (a sticky note: &quot;Too much attention can make a donkey think it's a lion.&quot;, now playing 505 by Arctic Monkeys), then locks onto the name inside a black hole's shadow." src="./assets/hero/event-horizon-light.svg" width="100%">
 </picture>
 </p>
 

@@ -60,7 +60,7 @@ const both = (group: string, name: string, render: (t: Theme) => string) => {
 
 const built: Built = { hero: '', sections: {}, stack: '', projects: [], telemetry: '', closing: '', links: [] };
 
-built.hero = both('hero', 'event-horizon', (t) => hero(t, stats));
+built.hero = both('hero', 'event-horizon', (t) => hero(t, stats, { song: config.song, quote: config.quote }));
 
 const SECTIONS: Record<string, SectionSpec> = {
   singularity: { index: '01', title: 'Singularity', note: "who's at the center", doodle: 'voidling' },

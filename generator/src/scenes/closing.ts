@@ -5,22 +5,26 @@
 import { n, el, g, svgDoc } from '../svg.ts';
 import { Typesetter } from '../type.ts';
 import * as D from '../doodles.ts';
-import { panel, panelColors } from '../parts.ts';
+import { panel, panelClip, panelColors } from '../parts.ts';
+import { themes } from '../tokens.ts';
 import type { Theme } from '../tokens.ts';
 import type { Stats } from '../stats.ts';
 
 const W = 1200;
 const H = 300;
 
-export function closing(t: Theme, s: Stats): string {
+export function closing(theme: Theme, s: Stats): string {
+  // a gold card in both themes, so its contents are always drawn in ink (the light style)
+  const t = { ...themes.light, fill: '#f6f3ea' }; // the mascot's ring and the plane's fold would vanish in gold on gold
+  const pageDark = theme.name === 'dark';
   D.resetIds();
   const ts = new Typesetter();
   const c = panelColors(t);
   const dark = t.name === 'dark';
   const accentText = dark ? t.accent : t.accentDeep;
-  const defs: string[] = [el('clipPath', { id: 'p' }, el('rect', { x: 1.5, y: 1.5, width: W - 3, height: H - 3, rx: 27 }))];
+  const defs: string[] = [panelClip('p', W, H)];
   const inner: string[] = [];
-  inner.push(D.starfield(t, { w: W, h: H, count: dark ? 60 : 30, seed: 'end', avoid: [{ cx: 170, cy: 150, r: 130 }], twinkle: 3, opacity: dark ? 0.45 : 0.25 }));
+  inner.push(D.starfield(t, { w: W, h: H, count: 36, seed: 'end', avoid: [{ cx: 170, cy: 150, r: 130 }], twinkle: 3, opacity: 0.35 }));
 
   // orbit rings behind the mascot
   for (const [rx, ry, op] of [[150, 40, 0.2], [190, 56, 0.12]] as const)
@@ -38,9 +42,9 @@ export function closing(t: Theme, s: Stats): string {
   const trail = `M${n(X + l2.width + 30)} 170C${n(X + l2.width + 120)} 210 ${n(930)} 210 990 120`;
   inner.push(el('path', { class: 'trail', d: trail, stroke: c.text, 'stroke-opacity': dark ? 0.4 : 0.45, 'stroke-width': 2, 'stroke-dasharray': '3 9', 'stroke-linecap': 'round' }));
   inner.push(g({ class: 'fly' }, D.plane(t, { x: 1020, y: 98, size: 74, rot: -14 })));
-  inner.push(g({ class: 'stamp' }, D.sticker(ts, t, { x: 1062, y: 214, text: ['End of', 'transmission'], size: 25, rot: 6, fill: dark ? t.accentHi : t.accent, seed: 'eot' })));
+  inner.push(g({ class: 'stamp' }, D.sticker(ts, t, { x: 1062, y: 214, text: ['End of', 'transmission'], size: 25, rot: 6, fill: '#f4f2ee', seed: 'eot' })));
 
-  const body = panel(t, W, H) + g({ 'clip-path': 'url(#p)' }, ...inner);
+  const body = panel(theme, W, H, 22, { fill: '#d9b25a', shadow: pageDark ? '#9aa3ad' : '#141618' }) + g({ 'clip-path': 'url(#p)' }, ...inner);
   const css = [
     `.float{animation:fl 6s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-5px)}}`,
     `.wave{transform-box:fill-box;transform-origin:100% 100%;animation:wv 3.6s ease-in-out infinite}@keyframes wv{0%,55%,100%{transform:rotate(0)}65%,85%{transform:rotate(-16deg)}75%{transform:rotate(10deg)}}`,

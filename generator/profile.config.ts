@@ -40,6 +40,12 @@ const config = {
     "I believe curiosity matters more than recognition. Too much attention can make a donkey think it's a lion.",
   ],
 
+  /** The "Now playing" card in the hero. null hides it. */
+  song: { title: '505', artist: 'Arctic Monkeys' } as { title: string; artist: string } | null,
+
+  /** The sticky note in the hero. null hides it. */
+  quote: "Too much attention can make a donkey think it's a lion." as string | null,
+
   /** Optional line for what you are working on now. */
   now: 'Building and exploring [HighTablePay](https://hightablepay.site).' as string | null,
 
