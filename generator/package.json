@@ -1,0 +1,30 @@
+{
+  "name": "event-horizon-profile",
+  "private": true,
+  "type": "module",
+  "description": "Generates the SVG artwork and README.md for the dafayudaalpazri GitHub profile (Event Horizon design system).",
+  "scripts": {
+    "fetch": "node src/fetch-github.ts",
+    "build": "node src/build.ts",
+    "verify": "node qa/verify.ts",
+    "refresh": "node src/fetch-github.ts && node src/build.ts && node qa/verify.ts",
+    "check": "tsc --noEmit -p .",
+    "qa": "node qa/shoot.ts"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "devDependencies": {
+    "@fontsource/anton": "5.3.0",
+    "@fontsource/archivo-black": "5.3.0",
+    "@fontsource/caveat": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/plus-jakarta-sans": "5.3.0",
+    "@types/node": "26.6.6",
+    "opentype.js": "2.0.0",
+    "playwright-core": "1.65.0",
+    "simple-icons": "16.36.0",
+    "svgo": "4.1.0",
+    "typescript": "7.0.2"
+  }
+}

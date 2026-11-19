@@ -1,0 +1,59 @@
+# Redraws the profile artwork from public GitHub data.
+# Daily check; it only commits when something the artwork shows has changed (see generator/src/fetch-github.ts).
+name: Redraw profile
+
+on:
+  schedule:
+    - cron: "17 3 * * *" # every day, 03:17 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "generator/**"
+      - "!generator/data/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: redraw-profile
+  cancel-in-progress: false
+
+jobs:
+  redraw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: generator/package-lock.json
+
+      - name: Install
+        working-directory: generator
+        run: npm ci --no-audit --no-fund
+
+      - name: Read public GitHub data
+        working-directory: generator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run fetch
+
+      - name: Draw and verify
+        working-directory: generator
+        run: npm run build && npm run verify
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md assets generator/data
+          if git diff --cached --quiet; then
+            echo "Nothing new to draw."
+          else
+            git commit -m "Redraw profile from public data"
+            git push
+          fi
