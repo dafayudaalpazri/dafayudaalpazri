@@ -47,14 +47,14 @@ I believe curiosity matters more than recognition. Too much attention can make a
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/accretion/stack-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/accretion/stack-light.svg">
-  <img alt="Accretion: Languages: JavaScript, TypeScript, CSS, HTML. Frameworks: React, Next.js. Libraries &amp; tools: Three.js, Tailwind CSS, Vite, Framer Motion, Vercel." src="./assets/accretion/stack-light.svg" width="100%">
+  <img alt="Accretion: Languages: JavaScript, CSS, HTML. Frameworks: React, Next.js. Libraries &amp; tools: Three.js, Tailwind CSS, Vite, Framer Motion, Vercel." src="./assets/accretion/stack-light.svg" width="100%">
 </picture>
 </p>
 
 <details>
 <summary><sub>Where these come from</sub></summary>
 
-- **Languages** (JavaScript, TypeScript, CSS, HTML): GitHub's language statistics for my 4 original public repos (forks left out).
+- **Languages** (JavaScript, CSS, HTML): GitHub's language statistics for my 2 original public repos (forks left out).
 - **React**: Porto-2026 README.
 - **Next.js**: SMKWEB and webProduct READMEs.
 - **Three.js**: Porto-2026 README.
@@ -74,24 +74,6 @@ I believe curiosity matters more than recognition. Too much attention can make a
 </p>
 
 <p align="center">
-<a href="https://github.com/dafayudaalpazri/elpatronwebsite">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/orbits/elpatronwebsite-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/orbits/elpatronwebsite-light.svg">
-  <img alt="elpatronwebsite: A JavaScript website, live on Vercel. JavaScript. Updated Aug 2026." src="./assets/orbits/elpatronwebsite-light.svg" width="100%">
-</picture>
-</a>
-</p>
-<p align="center">
-<a href="https://github.com/dafayudaalpazri/webProduct">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/orbits/webproduct-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/orbits/webproduct-light.svg">
-  <img alt="webProduct: A Next.js app in TypeScript, started in Firebase Studio. TypeScript. Updated Dec 2025." src="./assets/orbits/webproduct-light.svg" width="100%">
-</picture>
-</a>
-</p>
-<p align="center">
 <a href="https://github.com/dafayudaalpazri/SMKWEB">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/orbits/smkweb-dark.svg">
@@ -110,7 +92,7 @@ I believe curiosity matters more than recognition. Too much attention can make a
 </a>
 </p>
 
-<p align="center"><sub>Live: <a href="https://elpatronwebsite.vercel.app">elpatronwebsite.vercel.app</a> · <a href="https://smkweb.vercel.app">smkweb.vercel.app</a> · <a href="https://porto-2026-ten.vercel.app">porto-2026-ten.vercel.app</a></sub></p>
+<p align="center"><sub>Live: <a href="https://smkweb.vercel.app">smkweb.vercel.app</a> · <a href="https://porto-2026-ten.vercel.app">porto-2026-ten.vercel.app</a></sub></p>
 
 <p align="center">
 <picture>
@@ -124,17 +106,17 @@ I believe curiosity matters more than recognition. Too much attention can make a
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/telemetry/telemetry-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/telemetry/telemetry-light.svg">
-  <img alt="Telemetry, 20 Nov 2025 to 19 Nov 2026: 17 contributions on 6 active days. Longest streak 2 days. Biggest day 8 on 22 Dec 2025. 6 public repos, on GitHub since 2021." src="./assets/telemetry/telemetry-light.svg" width="100%">
+  <img alt="Telemetry, 21 Nov 2025 to 20 Nov 2026: 10 contributions on 4 active days. Longest streak 2 days. Biggest day 5 on 20 Nov 2026. 4 public repos, on GitHub since 2021." src="./assets/telemetry/telemetry-light.svg" width="100%">
 </picture>
 </p>
 
 <details>
 <summary><sub>Reading the telemetry</sub></summary>
 
-- **The ring** is the last 365 days (20 Nov 2025 to 19 Nov 2026), one tick per day, clockwise from the top. Gold spikes are days with public contributions; the longer the spike, the busier the day.
+- **The ring** is the last 365 days (21 Nov 2025 to 20 Nov 2026), one tick per day, clockwise from the top. Gold spikes are days with public contributions; the longer the spike, the busier the day.
 - **Counters** are counted from the same calendar: active days, the longest run of consecutive active days, the busiest day, month and weekday, public repos, and the year the account was created.
 - **Languages** are the share of code by size in each original public repo, averaged so that every repo counts the same.
-- **Kept current.** A GitHub Action checks the public data every day and redraws the images whenever something here changes; nothing is typed in by hand. Data as of 2026-11-19.
+- **Kept current.** A GitHub Action checks the public data every day and redraws the images whenever something here changes; nothing is typed in by hand. Data as of 2026-11-20.
 
 </details>
 
@@ -146,4 +128,4 @@ I believe curiosity matters more than recognition. Too much attention can make a
 </picture>
 </p>
 
-<p align="center"><sub>Original artwork, drawn as SVG by the generator in <a href="./generator">/generator</a> from public GitHub data (last update 2026-11-19). Motion stops if your system asks for reduced motion.</sub></p>
+<p align="center"><sub>Original artwork, drawn as SVG by the generator in <a href="./generator">/generator</a> from public GitHub data (last update 2026-11-20). Motion stops if your system asks for reduced motion.</sub></p>

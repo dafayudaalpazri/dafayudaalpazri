@@ -1,31 +1,33 @@
 {
   "login": "dafayudaalpazri",
-  "name": "Dafaa",
+  "name": "DAPAA",
   "bio": "Just me and my hobby",
   "createdAt": "2021-05-09T20:55:57Z",
   "followers": 0,
-  "publicRepos": 6,
+  "publicRepos": 4,
   "repos": [
     {
       "name": "dafayudaalpazri",
       "description": "My Github Profile",
       "url": "https://github.com/dafayudaalpazri/dafayudaalpazri",
       "homepage": null,
-      "language": null,
+      "language": "TypeScript",
       "stars": 0,
       "forks": 0,
       "fork": false,
       "archived": false,
-      "pushedAt": "2026-11-19T20:10:32Z",
+      "pushedAt": "2026-11-20T10:24:58Z",
       "createdAt": "2025-11-03T04:03:39Z",
-      "languages": {}
+      "languages": {
+        "TypeScript": 155964
+      }
     },
     {
       "name": "absensismkn8",
       "description": null,
       "url": "https://github.com/dafayudaalpazri/absensismkn8",
       "homepage": null,
-      "language": null,
+      "language": "Blade",
       "stars": 0,
       "forks": 0,
       "fork": true,
@@ -38,42 +40,6 @@
         "CSS": 15179,
         "JavaScript": 3560,
         "VBScript": 548
-      }
-    },
-    {
-      "name": "elpatronwebsite",
-      "description": null,
-      "url": "https://github.com/dafayudaalpazri/elpatronwebsite",
-      "homepage": "https://elpatronwebsite.vercel.app",
-      "language": "JavaScript",
-      "stars": 0,
-      "forks": 0,
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2026-08-12T23:28:11Z",
-      "createdAt": "2026-07-11T10:15:47Z",
-      "languages": {
-        "JavaScript": 219337,
-        "CSS": 7550
-      }
-    },
-    {
-      "name": "webProduct",
-      "description": null,
-      "url": "https://github.com/dafayudaalpazri/webProduct",
-      "homepage": null,
-      "language": "TypeScript",
-      "stars": 0,
-      "forks": 0,
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2025-12-22T23:45:42Z",
-      "createdAt": "2025-12-22T23:43:23Z",
-      "languages": {
-        "TypeScript": 158594,
-        "Nix": 1280,
-        "CSS": 1115,
-        "JavaScript": 135
       }
     },
     {
@@ -259,7 +225,7 @@
     },
     {
       "date": "2025-12-22",
-      "count": 8
+      "count": 1
     },
     {
       "date": "2025-12-23",
@@ -1063,7 +1029,7 @@
     },
     {
       "date": "2026-07-11",
-      "count": 2
+      "count": 0
     },
     {
       "date": "2026-07-12",
@@ -1155,7 +1121,7 @@
     },
     {
       "date": "2026-08-03",
-      "count": 1
+      "count": 0
     },
     {
       "date": "2026-08-04",
@@ -1195,7 +1161,7 @@
     },
     {
       "date": "2026-08-13",
-      "count": 2
+      "count": 0
     },
     {
       "date": "2026-08-14",
@@ -1588,9 +1554,13 @@
     {
       "date": "2026-11-19",
       "count": 3
+    },
+    {
+      "date": "2026-11-20",
+      "count": 5
     }
   ],
-  "totalContributions": 17,
-  "fetchedAt": "2026-11-19T20:18:38.833Z",
-  "source": "public"
+  "totalContributions": 10,
+  "fetchedAt": "2026-11-20T10:25:09.922Z",
+  "source": "graphql"
 }
