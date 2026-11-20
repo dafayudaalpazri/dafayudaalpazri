@@ -63,10 +63,10 @@ const built: Built = { hero: '', sections: {}, stack: '', projects: [], telemetr
 built.hero = both('hero', 'event-horizon', (t) => hero(t, stats, { song: config.song, quote: config.quote }));
 
 const SECTIONS: Record<string, SectionSpec> = {
-  singularity: { index: '01', title: 'Singularity', note: "who's at the center", doodle: 'voidling' },
-  accretion: { index: '02', title: 'Accretion', note: 'what my public projects are built from', doodle: 'spiral' },
-  orbits: { index: '03', title: 'Orbits', note: 'public repos, in orbit', doodle: 'orbit' },
-  telemetry: { index: '04', title: 'Telemetry', note: 'signals from the last 12 months', doodle: 'eye' },
+  singularity: { index: '01', title: 'Singularity', note: "who's at the center", variant: 'singularity', sticky: ["hi, I'm", stats.name + '!'] },
+  accretion: { index: '02', title: 'Accretion', note: 'what my public projects are built from', variant: 'accretion', sticky: ['the', 'ingredients'] },
+  orbits: { index: '03', title: 'Orbits', note: 'public repos, in orbit', variant: 'orbits', sticky: [`${stats.featured.length} in orbit`] },
+  telemetry: { index: '04', title: 'Telemetry', note: 'signals from the last 12 months', variant: 'telemetry', bars: stats.weekdays },
 };
 for (const [key, spec] of Object.entries(SECTIONS)) built.sections[key] = { path: both('sections', `${spec.index}-${key}`, (t) => section(t, spec)), spec };
 

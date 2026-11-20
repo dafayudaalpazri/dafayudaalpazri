@@ -196,39 +196,173 @@ export function eyeball(t: Theme, p: Place): string {
  * (±2.5u, -6u), two arm nubs, four stubby legs, clay #D97757. Here u = 8 in the 100 box, ground at y 88.
  * `waveCls` goes on the right arm nub, `blinkCls` on the eyes.
  */
-export function clawd(t: Theme, p: Place, o: { waveCls?: string; blinkCls?: string; heart?: boolean } = {}): string {
+export type Pose = 'wave' | 'laptop' | 'coffee' | 'read' | 'magnify' | 'sleep';
+
+export function clawd(t: Theme, p: Place, o: { waveCls?: string; blinkCls?: string; heart?: boolean; pose?: Pose } = {}): string {
   const CLAY = '#D97757';
   const CLAY_DK = '#A84D33';
   const EYE = '#2B2233';
   const line = '#141618';
+  const pose = o.pose ?? 'wave';
   const body = 'M10 24H90V72H10Z';
   const legs = [-4, -2, 1, 3].map((lx) => `M${50 + lx * 8} 72h8v16h-8Z`);
-  const armL = 'M10 44H2V58H10Z';
-  const armR = 'M90 44H98V58H90Z';
+  // arms move with the pose: out to the sides, forward onto a keyboard, or up holding something
+  const armL = pose === 'laptop' ? 'M16 64H28V73H16Z' : pose === 'read' ? 'M14 64H24V74H14Z' : 'M10 44H2V58H10Z';
+  const armR = pose === 'laptop' ? 'M72 64H84V73H72Z' : pose === 'read' ? 'M76 64H86V74H76Z' : pose === 'coffee' ? 'M90 50H100V60H90Z' : pose === 'magnify' ? 'M90 40H100V50H90Z' : 'M90 44H98V58H90Z';
+  const props: { sil: string[]; under: string; over: string } = { sil: [], under: '', over: '' };
+  const S = (sw: number, k = 0.8) => n(sw * k);
+  let eyes = (sw: number) => g({ class: o.blinkCls }, el('rect', { x: 26, y: 32, width: 8, height: 16, fill: EYE }), el('rect', { x: 66, y: 32, width: 8, height: 16, fill: EYE }));
+  let extra = (_sw: number) => '';
+  if (pose === 'laptop') {
+    // the lid faces him; we see its back (a tiny black-hole sticker on it) and the screen's glow on his face
+    props.sil.push('M20 46H80V74H20Z', 'M10 74H90V81H10Z');
+    eyes = () => g({ class: o.blinkCls }, el('rect', { x: 26, y: 36, width: 8, height: 10, fill: EYE }), el('rect', { x: 66, y: 36, width: 8, height: 10, fill: EYE }));
+    extra = (sw) =>
+      el('rect', { class: 'cglow', x: 12, y: 26, width: 76, height: 20, fill: '#bfe3ff', opacity: 0.35 }) +
+      el('path', { d: 'M20 46H80V74H20Z', fill: '#c9ccd1', stroke: line, 'stroke-width': S(sw, 0.9) }) +
+      el('circle', { cx: 50, cy: 60, r: 6, fill: '#08090a', stroke: '#d9b25a', 'stroke-width': S(sw, 0.45) }) +
+      el('path', { d: 'M10 74H90V81H10Z', fill: '#9aa3ad', stroke: line, 'stroke-width': S(sw, 0.9) });
+  } else if (pose === 'coffee') {
+    props.sil.push('M96 46h18v24h-18Z');
+    extra = (sw) =>
+      el('path', { class: 'csteam', d: 'M101 40c-4-5 4-8 0-14M109 40c-4-5 4-8 0-14', stroke: t.name === 'dark' ? '#f4f2ee' : '#8f8b82', 'stroke-width': S(sw, 0.6), 'stroke-linecap': 'round', fill: 'none' }) +
+      el('path', { d: 'M96 46h18v24h-18Z', fill: '#f4f2ee', stroke: line, 'stroke-width': S(sw, 0.9) }) +
+      el('path', { d: 'M114 51c7 0 7 12 0 12', stroke: line, 'stroke-width': S(sw, 0.8), fill: 'none' }) +
+      el('path', { d: 'M96 52h18', stroke: '#8a5a3c', 'stroke-width': S(sw, 0.6) });
+  } else if (pose === 'read') {
+    props.sil.push('M22 52h56v36H22Z');
+    eyes = () => g({ class: o.blinkCls }, el('rect', { x: 26, y: 36, width: 8, height: 10, fill: EYE }), el('rect', { x: 66, y: 36, width: 8, height: 10, fill: EYE }));
+    extra = (sw) =>
+      el('path', { d: 'M22 52h56v36H22Z', fill: '#ffffff', stroke: line, 'stroke-width': S(sw, 0.9) }) +
+      el('path', { d: 'M30 61h40M30 68h34M30 75h38M30 82h22', stroke: '#8f8b82', 'stroke-width': S(sw, 0.5), 'stroke-linecap': 'round' }) +
+      el('path', { d: 'M68 52l10 10V52Z', fill: '#e6e5e1', stroke: line, 'stroke-width': S(sw, 0.6) });
+  } else if (pose === 'magnify') {
+    props.sil.push('M110 36m-15 0a15 15 0 1 0 30 0a15 15 0 1 0-30 0');
+    extra = (sw) =>
+      el('path', { d: 'M99 46L92 54', stroke: '#6b4a2e', 'stroke-width': S(sw, 1.6), 'stroke-linecap': 'round' }) +
+      el('circle', { cx: 110, cy: 36, r: 15, fill: '#bfe3ff', 'fill-opacity': 0.45, stroke: line, 'stroke-width': S(sw, 1) }) +
+      el('path', { d: 'M103 30a9 9 0 0 1 8-5', stroke: '#ffffff', 'stroke-width': S(sw, 0.6), 'stroke-linecap': 'round', fill: 'none' });
+  } else if (pose === 'sleep') {
+    eyes = (sw) => el('path', { d: 'M25 42h10M65 42h10', stroke: EYE, 'stroke-width': S(sw, 0.9), 'stroke-linecap': 'round' });
+    extra = (sw) =>
+      g({ class: 'czz' }, el('path', { d: 'M94 12h9l-9 10h9', stroke: t.name === 'dark' ? '#f4f2ee' : line, 'stroke-width': S(sw, 0.7), fill: 'none', 'stroke-linejoin': 'round' })) +
+      g({ class: 'czz czz2' }, el('path', { d: 'M106 -6h13l-13 14h13', stroke: t.name === 'dark' ? '#f4f2ee' : line, 'stroke-width': S(sw, 0.8), fill: 'none', 'stroke-linejoin': 'round' }));
+  }
+  const armCls = pose === 'laptop' ? 'ctype' : pose === 'wave' ? o.waveCls : undefined;
   return place(
     p,
     (sw) =>
       legs.map((d, i) => el('path', { d, fill: i === 0 || i === 3 ? CLAY_DK : CLAY, stroke: line, 'stroke-width': n(sw * 0.8) })).join('') +
-      el('path', { d: armL, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) }) +
-      g({ class: o.waveCls }, el('path', { d: armR, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) })) +
+      (pose === 'laptop' || pose === 'read' ? '' : el('path', { d: armL, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) })) +
+      (pose === 'laptop' || pose === 'read' ? '' : g({ class: armCls }, el('path', { d: armR, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) }))) +
       el('path', { d: body, fill: CLAY, stroke: line, 'stroke-width': n(sw) }) +
       el('path', { d: 'M14 28H86', stroke: '#F2A283', 'stroke-width': n(sw * 0.7), 'stroke-linecap': 'round', opacity: 0.8 }) +
-      g({ class: o.blinkCls }, el('rect', { x: 26, y: 32, width: 8, height: 16, fill: EYE }), el('rect', { x: 66, y: 32, width: 8, height: 16, fill: EYE })) +
+      eyes(sw) +
+      extra(sw) +
+      (pose === 'laptop' || pose === 'read'
+        ? g({ class: pose === 'laptop' ? 'ctype' : undefined }, el('path', { d: armL, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) })) +
+          g({ class: pose === 'laptop' ? 'ctype ctype2' : undefined }, el('path', { d: armR, fill: CLAY, stroke: line, 'stroke-width': n(sw * 0.8) }))
+        : '') +
       (o.heart ? el('path', { d: 'M50 14c-3-6-12-4-10 3 1 3 6 6 10 9 4-3 9-6 10-9 2-7-7-9-10-3Z', fill: '#ff5c7a', stroke: line, 'stroke-width': n(sw * 0.6) }) : ''),
-    { t, d: [body, armL, armR, ...legs] },
+    { t, d: [body, armL, armR, ...legs, ...props.sil] },
   );
 }
 
-/** Motion for Clawd cameos: put `cwave` on the arm, `cblink` on the eyes, `chop` on a wrapper. */
+/** Motion for Clawd and the paper props. Include once per file that uses them. */
 export function clawdCss(): string {
   return (
     `.cwave{transform-box:fill-box;transform-origin:0 100%;animation:cwv 2.6s ease-in-out infinite}@keyframes cwv{0%,50%,100%{transform:rotate(0)}65%,85%{transform:rotate(-26deg)}75%{transform:rotate(-8deg)}}` +
     `.cblink{transform-box:fill-box;transform-origin:center;animation:cbl 4.6s steps(1) infinite}@keyframes cbl{0%,94%{transform:none}95%,98%{transform:scaleY(.15)}}` +
-    `.chop{animation:chop 3.4s ease-in-out infinite}@keyframes chop{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-5px)}}`
+    `.chop{animation:chop 3.4s ease-in-out infinite}@keyframes chop{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-5px)}}` +
+    `.ctype{animation:ctp .32s steps(2) infinite}.ctype2{animation-delay:-.16s}@keyframes ctp{50%{transform:translateY(-3px)}}` +
+    `.cglow{animation:cgl 1.8s steps(3) infinite}@keyframes cgl{50%{opacity:.18}}` +
+    `.csteam{animation:cst 2.4s ease-in-out infinite}@keyframes cst{0%{opacity:0;transform:translateY(6px)}40%{opacity:.9}100%{opacity:0;transform:translateY(-8px)}}` +
+    `.czz{opacity:0;animation:czz 3s ease-in-out infinite}.czz2{animation-delay:1.5s}@keyframes czz{0%{opacity:0;transform:translate(0,6px)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-10px)}}` +
+    `.fly{animation:fly var(--d,7s) ease-in-out infinite}@keyframes fly{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(8px,-10px) rotate(6deg)}50%{transform:translate(-4px,-16px) rotate(-4deg)}75%{transform:translate(-10px,-6px) rotate(3deg)}}` +
+    `.flap{transform-box:fill-box;transform-origin:50% 0;animation:flap 2.6s ease-in-out infinite}@keyframes flap{50%{transform:skewX(-6deg) rotate(2deg)}}`
   );
 }
-export const cameo = (t: Theme, x: number, y: number, size: number, extra: { heart?: boolean } = {}) =>
+export const cameo = (t: Theme, x: number, y: number, size: number, extra: { heart?: boolean; pose?: Pose } = {}) =>
   g({ class: 'chop' }, clawd(t, { x, y, size, sw: Math.max(2.4, size * 0.05) }, { waveCls: 'cwave', blinkCls: 'cblink', ...extra }));
+
+// ---------------------------------------------------------------------------------------------------
+// paper props: sheets, sticky notes, paperclips, pushpins, tape
+
+/** a paperclip, drawn as one bent wire */
+export function paperclip(x: number, y: number, rot = 0, color = '#9aa3ad', scale = 1): string {
+  return g(
+    { transform: `translate(${n(x)} ${n(y)}) rotate(${n(rot)}) scale(${n(scale, 3)})` },
+    el('path', { d: 'M4 22V4a5 5 0 0 1 10 0v24a8 8 0 0 1-16 0V8', stroke: '#141618', 'stroke-width': 4.6, fill: 'none', 'stroke-linecap': 'round' }),
+    el('path', { d: 'M4 22V4a5 5 0 0 1 10 0v24a8 8 0 0 1-16 0V8', stroke: color, 'stroke-width': 2.4, fill: 'none', 'stroke-linecap': 'round' }),
+  );
+}
+
+/** a pushpin seen from above */
+export function pushpin(x: number, y: number, color = '#ff3b30'): string {
+  return g({}, el('ellipse', { cx: x + 3, cy: y + 4, rx: 7, ry: 4, fill: '#000', opacity: 0.25 }), el('circle', { cx: x, cy: y, r: 7, fill: color, stroke: '#141618', 'stroke-width': 2 }), el('circle', { cx: x - 2, cy: y - 2, r: 2, fill: '#fff', opacity: 0.7 }));
+}
+
+/** a strip of masking tape */
+export function tape(x: number, y: number, w = 56, rot = -4): string {
+  return el('rect', { x: x - w / 2, y: y - 9, width: w, height: 18, fill: '#fffef4', opacity: 0.72, transform: `rotate(${n(rot)} ${n(x)} ${n(y)})` });
+}
+
+/** a sheet of paper: ruled lines, a folded corner, optional clip, tape or pin */
+export function sheet(o: { x: number; y: number; w: number; h: number; rot?: number; fill?: string; lines?: number; grid?: boolean; clip?: boolean; tape?: boolean; pin?: boolean; cls?: string; style?: string; dark?: boolean }): string {
+  const { x, y, w, h } = o;
+  const f = Math.min(w, h) * 0.18;
+  let ruled = '';
+  if (o.grid) {
+    for (let gx = x + 8; gx < x + w - 4; gx += 10) ruled += `M${n(gx)} ${n(y + 4)}V${n(y + h - 4)}`;
+    for (let gy = y + 8; gy < y + h - 4; gy += 10) ruled += `M${n(x + 4)} ${n(gy)}H${n(x + w - 4)}`;
+  } else for (let i = 0; i < (o.lines ?? 4); i++) ruled += `M${n(x + w * 0.14)} ${n(y + h * (0.3 + i * 0.16))}h${n(w * (0.72 - (i % 2) * 0.18))}`;
+  return g(
+    { class: o.cls, style: o.style },
+    g(
+      { transform: `rotate(${n(o.rot ?? 0)} ${n(x + w / 2)} ${n(y + h / 2)})` },
+      el('path', { d: `M${n(x + 4)} ${n(y + 5)}h${n(w)}v${n(h)}h${n(-w)}Z`, fill: '#141618', opacity: o.dark ? 0.5 : 0.18 }),
+      el('path', { d: `M${n(x)} ${n(y)}h${n(w - f)}l${n(f)} ${n(f)}v${n(h - f)}h${n(-w)}Z`, fill: o.fill ?? '#ffffff', stroke: '#141618', 'stroke-width': 2 }),
+      el('path', { d: ruled, stroke: o.grid ? '#8fb3d9' : '#9a978f', 'stroke-width': o.grid ? 0.8 : 1.6, 'stroke-linecap': 'round', opacity: o.grid ? 0.6 : 0.8 }),
+      el('path', { d: `M${n(x + w - f)} ${n(y)}v${n(f)}h${n(f)}Z`, fill: '#e6e5e1', stroke: '#141618', 'stroke-width': 1.6, 'stroke-linejoin': 'round' }),
+      o.clip ? paperclip(x + w * 0.2, y - 10, -8) : '',
+      o.tape ? tape(x + w / 2, y, Math.min(60, w * 0.5)) : '',
+      o.pin ? pushpin(x + w / 2, y + 10) : '',
+    ),
+  );
+}
+
+/** a sticky note with handwriting; it may hang over the edge of its section */
+export function stickyNote(ts: Typesetter, o: { x: number; y: number; w?: number; h?: number; lines: string[]; rot?: number; color?: string; size?: number; pin?: boolean; tape?: boolean; cls?: string; dark?: boolean }): string {
+  const w = o.w ?? 150;
+  const h = o.h ?? 120;
+  const size = o.size ?? 22;
+  const top = o.y + (h - o.lines.length * size * 1.08) / 2 + size * 0.8;
+  return g(
+    { class: o.cls },
+    g(
+      { transform: `rotate(${n(o.rot ?? -4)} ${n(o.x + w / 2)} ${n(o.y + h / 2)})` },
+      el('path', { d: `M${n(o.x + 5)} ${n(o.y + 6)}h${n(w)}v${n(h)}h${n(-w)}Z`, fill: o.dark ? '#d9b25a' : '#141618', opacity: o.dark ? 0.6 : 0.85 }),
+      el('path', { d: `M${n(o.x)} ${n(o.y)}h${n(w)}v${n(h - 14)}l-14 14h${n(-w + 14)}Z`, fill: o.color ?? '#f6dc8f', stroke: '#141618', 'stroke-width': 2.5 }),
+      el('path', { d: `M${n(o.x + w)} ${n(o.y + h - 14)}l-14 14v-14Z`, fill: '#c9a94f', stroke: '#141618', 'stroke-width': 2 }),
+      ...o.lines.map((l, i) => ts.run(l, { font: 'caveat', size, x: o.x + w / 2, y: top + i * size * 1.08, anchor: 'middle', fill: '#141618' })),
+      o.pin ? pushpin(o.x + w / 2, o.y + 8) : '',
+      o.tape ? tape(o.x + w / 2, o.y - 1, Math.min(64, w * 0.45)) : '',
+    ),
+  );
+}
+
+/** a small loose sheet that flutters and drifts (use several, with different --d) */
+export function flyer(o: { x: number; y: number; size: number; rot?: number; d?: number; delay?: number; dark?: boolean }): string {
+  const s = o.size;
+  return g(
+    { class: 'fly', style: `--d:${n(o.d ?? 7)}s;animation-delay:-${n(o.delay ?? 0)}s` },
+    g(
+      { class: 'flap', transform: `rotate(${n(o.rot ?? 0)} ${n(o.x)} ${n(o.y)})` },
+      el('path', { d: `M${n(o.x - s / 2)} ${n(o.y - s * 0.65)}h${n(s * 0.8)}l${n(s * 0.2)} ${n(s * 0.2)}v${n(s * 1.1)}h${n(-s)}Z`, fill: '#ffffff', stroke: '#141618', 'stroke-width': 1.8 }),
+      el('path', { d: `M${n(o.x - s * 0.32)} ${n(o.y - s * 0.25)}h${n(s * 0.6)}M${n(o.x - s * 0.32)} ${n(o.y + s * 0.02)}h${n(s * 0.45)}M${n(o.x - s * 0.32)} ${n(o.y + s * 0.28)}h${n(s * 0.55)}`, stroke: '#9a978f', 'stroke-width': 1.4, 'stroke-linecap': 'round' }),
+    ),
+  );
+}
 
 // ---------------------------------------------------------------------------------------------------
 // marks

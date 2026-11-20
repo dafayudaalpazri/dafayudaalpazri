@@ -61,10 +61,12 @@ export function projectCard(t: Theme, repo: Repo, index: number, blurb: string |
 
   const sys = orbitSystem(t, 110, 100, repo);
   body.push(sys.svg);
-  if (index === 0) {
-    body.push(D.cameo(t, 1128, 166, 38));
-    css.push(D.clawdCss());
-  }
+  css.push(D.clawdCss());
+  const k = index % 4;
+  if (k === 0) body.push(D.paperclip(30, -10, -10, '#c9ccd1', 1.3), D.cameo(t, 1126, 160, 44, { pose: 'laptop' }));
+  if (k === 1) body.push(D.stickyNote(ts, { x: 1036, y: 128, w: 112, h: 56, lines: [repo.language ? `${repo.language}!` : 'hello!'], rot: -4, size: 20, dark }));
+  if (k === 2) body.push(D.pushpin(W / 2 + 140, 14, '#d9b25a'), D.cameo(t, 1130, 160, 40, { pose: 'coffee' }));
+  if (k === 3) body.push(D.cameo(t, 1126, 160, 40, { pose: 'sleep' }));
   css.push(sys.css, `@keyframes rot{to{transform:rotate(360deg)}}@keyframes crot{to{transform:rotate(-360deg)}}`);
 
   const X = 214;

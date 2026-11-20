@@ -103,14 +103,16 @@ export function stackPanel(t: Theme, s: Stats, stack: StackItem[]): string {
   inner.push(...chips);
   // cameo: Clawd digging in his heels against the pull
   inner.push(g({ transform: 'rotate(10 336 296)' }, D.cameo(t, 336, 300, 40)));
-  inner.push(D.note(ts, { x: 70, y: 368, text: 'everything falls in eventually', size: 22, rot: -4, fill: dark ? t.accentHi : t.accentDeep }));
+  inner.push(D.stickyNote(ts, { x: 36, y: 318, w: 150, h: 84, lines: ['everything falls', 'in eventually'], rot: -5, tape: true, size: 20, cls: 'sway', dark }));
+  inner.push(D.paperclip(560, -8, 4, '#c9ccd1', 1.2));
 
   // a handwritten source note, HIGH TABLE style
   inner.push(D.note(ts, { x: 905, y: 388, text: 'read from my public repos', size: 26, rot: -3, fill: dark ? t.accentHi : t.accentDeep }));
   inner.push(D.hook(t, { x: 872, y: 372, size: 40, rot: 20, sw: 2.6 }, dark ? t.accentHi : t.accentDeep));
 
   body.push(g({ 'clip-path': 'url(#p)' }, ...inner));
-  css.push(`.flow{animation:flow 3s linear infinite}@keyframes flow{to{stroke-dashoffset:-12}}`, `.chip{animation:chip 4.2s ease-in-out infinite}@keyframes chip{50%{transform:translateY(-3px)}}`,
+  css.push(`.flow{animation:flow 3s linear infinite}@keyframes flow{to{stroke-dashoffset:-12}}`, `.sway{transform-box:fill-box;transform-origin:50% 0;animation:sway 4.5s ease-in-out infinite}@keyframes sway{50%{transform:rotate(-3deg)}}`,
+    `.chip{animation:chip 4.2s ease-in-out infinite}@keyframes chip{50%{transform:translateY(-3px)}}`,
     `.rider{opacity:0;animation:rider 3.2s cubic-bezier(.5,0,.9,.6) infinite}@keyframes rider{0%{stroke-dashoffset:0;opacity:0}12%{opacity:1}100%{stroke-dashoffset:-100;opacity:.15}}`,
     `.ripple{transform-origin:${HX}px ${HY}px;animation:ripple 4s ease-out infinite}@keyframes ripple{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(2.4,1.8)}}`,
     `.suck{opacity:0;transform-box:fill-box;transform-origin:right center;animation:suck 5s cubic-bezier(.6,0,.9,.5) 1s infinite}@keyframes suck{0%{opacity:0;transform:translate(0,0)}15%{opacity:.8}75%{opacity:.6;transform:translate(-${X0 - HX - 60}px,-2px) scale(2.6,.35)}100%{opacity:0;transform:translate(-${X0 - HX - 20}px,-4px) scale(3.4,.1)}}`);

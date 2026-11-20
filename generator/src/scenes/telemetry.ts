@@ -97,14 +97,15 @@ export function telemetry(t: Theme, s: Stats): string {
   // the black hole in the middle, holding the year's total
   const hole = blackHole({ id: 'th', cx: CX, cy: CY, R: 66, theme: t, disk: false, haloReach: 0.42, haloStreaks: 6, seed: 'tele-hole', period: 10 });
   defs.push(hole.defs);
-  css.push(hole.css, D.clawdCss());
+  css.push(hole.css, D.clawdCss(), `.sway{transform-box:fill-box;transform-origin:50% 0;animation:sway 4.5s ease-in-out infinite}@keyframes sway{50%{transform:rotate(-3deg)}}`);
   inner.push(hole.back, hole.front);
   const big = ts.runWithWidth(String(s.total), { font: 'anton', size: 56, x: CX, y: CY + 12, anchor: 'middle', fill: '#f4f2ee' });
   inner.push(big.svg);
   inner.push(ts.run('CONTRIBUTIONS', { font: 'mono500', size: 9, x: CX, y: CY + 30, anchor: 'middle', tracking: 0.16, fill: '#c9c5bb' }));
 
   // notes, HIGH TABLE style
-  inner.push(D.cameo(t, 268, 598, 42));
+  inner.push(D.cameo(t, 272, 596, 46, { pose: 'magnify' }));
+  if (s.busiestWeekday !== null) inner.push(D.stickyNote(ts, { x: 28, y: 26, w: 124, h: 86, lines: ['busiest:', `${WEEKDAYS[s.busiestWeekday]}days!`], rot: -6, pin: true, size: 21, cls: 'sway', dark }));
   inner.push(D.note(ts, { x: 30, y: 612, text: 'each tick is one day', size: 26, rot: -3, fill: dark ? t.accentHi : t.accentDeep }));
   inner.push(D.hook(t, { x: 148, y: 560, size: 48, rot: -8, flip: true, sw: 2.6 }, dark ? t.accentHi : t.accentDeep));
   if (s.biggestDay) {

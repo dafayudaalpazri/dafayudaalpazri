@@ -39,16 +39,18 @@ export function closing(t: Theme, s: Stats): string {
   // the paper plane leaves
   const trail = `M${n(X + l2.width + 26)} 186C${n(X + l2.width + 110)} 210 ${n(1000)} 200 1040 128`;
   inner.push(el('path', { class: 'trail', d: trail, stroke: c.text, 'stroke-opacity': dark ? 0.35 : 0.4, 'stroke-width': 1.8, 'stroke-dasharray': '3 9', 'stroke-linecap': 'round' }));
-  inner.push(g({ class: 'fly' }, D.plane(t, { x: 1068, y: 106, size: 66, rot: -14, sw: 3.2 })));
+  inner.push(g({ class: 'plane' }, D.plane(t, { x: 1068, y: 106, size: 66, rot: -14, sw: 3.2 })));
 
+  inner.push(D.stickyNote(ts, { x: 950, y: 170, w: 120, h: 84, lines: ['see ya!'], rot: 7, pin: true, size: 26, dark }));
   const body = panel(t, W, H, 22, { fill: dark ? '#15171a' : '#f4f3f0' }) + g({ 'clip-path': 'url(#p)' }, ...inner);
   const css = [
+    D.clawdCss(),
     `.hop{animation:hop 3.2s ease-in-out infinite}@keyframes hop{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-6px)}}`,
     `.wave{transform-box:fill-box;transform-origin:0 100%;animation:wv 2.6s ease-in-out infinite}@keyframes wv{0%,50%,100%{transform:rotate(0)}65%,85%{transform:rotate(-24deg)}75%{transform:rotate(-8deg)}}`,
     `.blink{transform-box:fill-box;transform-origin:center;animation:bl 4.5s steps(1) infinite}@keyframes bl{0%,94%{transform:none}95%,98%{transform:scaleY(.15)}}`,
     `.orbit{transform-box:fill-box;transform-origin:center;animation:ob 7s ease-in-out infinite}@keyframes ob{50%{transform:translateY(-4px) rotate(4deg)}}`,
     `.trail{animation:tr 1.6s linear infinite}@keyframes tr{to{stroke-dashoffset:-12}}`,
-    `.fly{animation:fy 4.5s ease-in-out infinite}@keyframes fy{50%{transform:translate(6px,-6px)}}`,
+    `.plane{animation:fy 4.5s ease-in-out infinite}@keyframes fy{50%{transform:translate(6px,-6px)}}`,
     `.tw{animation:tw 3.4s steps(1) infinite}.tw1{animation-delay:-1.1s}.tw2{animation-delay:-2.3s}@keyframes tw{50%{opacity:.15}}`,
   ].join('');
   return svgDoc({ width: W, height: H, label: `Thanks for falling in. See you beyond the horizon. Clawd, Claude's mascot, waves next to a small black hole. @${s.login}, on GitHub since ${s.since}.`, style: css, defs: defs.join('') + ts.defs(), body });

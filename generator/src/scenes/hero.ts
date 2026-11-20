@@ -109,12 +109,12 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
 
   // bokeh: out-of-focus lights drifting behind everything
   const bokeh: [number, number, number, string, number][] = [
-    [120, 300, 70, 'bkG', 7.4], [300, 470, 54, 'bkC', 9.2], [470, 110, 46, 'bkC', 8.1], [760, 470, 62, 'bkG', 10.3], [1010, 250, 58, 'bkC', 8.8], [1120, 500, 44, 'bkG', 7.9],
+    [120, 300, 70, 'bkG', 7.4], [760, 470, 62, 'bkG', 10.3], [1010, 250, 58, 'bkC', 8.8], [1120, 500, 44, 'bkG', 7.9],
   ];
   cam.push(g({ class: 'fade', style: 'mix-blend-mode:screen' }, ...bokeh.map(([x, y, r, id, d], i) => g({ class: `bob b${3 + (i % 4)}`, style: `animation-duration:${d}s;animation-delay:-${i * 1.3}s` }, el('circle', { cx: x, cy: y, r, fill: `url(#${id})` })))));
 
   const field: string[] = [];
-  field.push(D.starfield(sky, { x: WIN.x, y: WIN.y, w: WIN.w, h: WIN.h, count: 150, seed: 'hero-stars', avoid: [{ cx: CX, cy: CY, r: R * 1.55 }], twinkle: 8 }));
+  field.push(D.starfield(sky, { x: WIN.x, y: WIN.y, w: WIN.w, h: WIN.h, count: 100, seed: 'hero-stars', avoid: [{ cx: CX, cy: CY, r: R * 1.55 }], twinkle: 8 }));
   for (const o of [{ rx: 590, ry: 160, rot: -5, op: 0.1 }, { rx: 660, ry: 215, rot: 4, op: 0.08 }, { rx: 520, ry: 255, rot: -12, op: 0.06 }])
     field.push(el('ellipse', { cx: CX, cy: CY, rx: o.rx, ry: o.ry, transform: `rotate(${o.rot} ${CX} ${CY})`, stroke: sky.text, 'stroke-opacity': o.op, 'stroke-width': 1.2, 'stroke-dasharray': '2 9', 'stroke-linecap': 'round' }));
   cam.push(g({ class: 'fade' }, ...field));
@@ -213,7 +213,6 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
   // notification
   {
     const ping = D.pill(ts, { x: 44, y: 400, text: 'new notification', size: 14.5, fill: '#f4f2ee', ink: INK, dot: GOLD, stroke: INK });
-    debris.push({ svg: g({ transform: `rotate(-4 ${n(44 + ping.w / 2)} 400)` }, ping.svg), pull: [-14, 8], bob: [5.8, 0.4, 4], op: 0.88, enter: 'pop', delay: 1.0 });
   }
 
   // ---- the hole pulls on everything ---------------------------------------------------------------------------
@@ -231,7 +230,7 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
   css.push(`.tide{animation:tide 2.4s linear infinite}@keyframes tide{to{stroke-dashoffset:-8}}`);
   // infalling particles: each spirals in on a squashed orbit and fades as it crosses the disk
   const fall: string[] = [];
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i < 9; i++) {
     const r0 = 300 + (i % 4) * 50;
     const dur = 5 + (i % 5) * 1.3;
     fall.push(
@@ -244,6 +243,24 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
   // particles pass behind the shadow, never across it
   defs.push(el('mask', { id: 'nohole', maskUnits: 'userSpaceOnUse', x: 0, y: 0, width: W, height: H }, el('rect', { width: W, height: H, fill: '#fff' }), el('circle', { cx: CX, cy: CY, r: R * 1.02, fill: '#000' })));
   cam.push(g({ class: 'fade', mask: 'url(#nohole)' }, ...fall));
+
+  // Clawd orbits the hole with his laptop: rotate in a squashed frame, counter-rotate so he stays upright.
+  // Two copies swap every half turn: the near half in front of everything, the far half behind the shadow.
+  const ORX = 330;
+  const ORY = 96;
+  const k = ORY / ORX;
+  const rider = (cls: string) =>
+    g(
+      { transform: `translate(${CX} ${CY}) scale(1 ${n(k, 4)})` },
+      g({ class: 'corb' }, g({ transform: `translate(${ORX} 0)` }, g({ class: 'corbc' }, g({ transform: `scale(1 ${n(1 / k, 4)})` }, g({ class: cls }, D.clawd(sky, { x: 0, y: -14, size: 54, sw: 3 }, { pose: 'laptop', blinkCls: 'cblink' })))))),
+    );
+  cam.push(el('ellipse', { cx: CX, cy: CY, rx: ORX, ry: ORY, stroke: '#fff4d8', 'stroke-opacity': 0.14, 'stroke-width': 1.2, 'stroke-dasharray': '3 7' }));
+  cam.push(g({ mask: 'url(#nohole)', opacity: 0.75 }, rider('cfar')));
+  cam.push(rider('cnear'));
+  css.push(
+    `.corb{animation:corb 16s linear infinite}@keyframes corb{to{transform:rotate(360deg)}}.corbc{animation:corbc 16s linear infinite}@keyframes corbc{to{transform:rotate(-360deg)}}`,
+    `.cnear{animation:cnear 16s steps(1,end) infinite}@keyframes cnear{0%{opacity:1}50%{opacity:0}}.cfar{opacity:0;animation:cfar 16s steps(1,end) infinite}@keyframes cfar{0%{opacity:0}50%{opacity:1}}`,
+  );
   css.push(`.swirl{animation:swirl 6s linear infinite}@keyframes swirl{to{transform:rotate(-720deg)}}`, `.sink{animation:sink 6s cubic-bezier(.55,0,1,.6) infinite}@keyframes sink{0%{transform:translateX(0);opacity:0}10%{opacity:1}85%{opacity:.9}100%{transform:translateX(-240px);opacity:0}}`);
   // gravitational waves: a ripple leaves the horizon every few seconds
   for (let i = 0; i < 2; i++) cam.push(el('ellipse', { class: 'wave', style: `animation-delay:${n(3 + i * 2.5, 1)}s`, cx: CX, cy: CY, rx: R * 1.1, ry: R * 1.1, stroke: '#fff4d8', 'stroke-width': 2, opacity: 0 }));
@@ -251,15 +268,11 @@ export function hero(t: Theme, s: Stats, extras: HeroExtras): string {
 
   // critters and marks
   debris.push({ svg: D.ghost(sky, { x: 922, y: 304, size: 76, rot: -4 }, { stretch: 1 }), hunt: box(918, 302, 58, 42), pull: [30, 4], bob: [6.8, 1.2, 4], enter: 'pop', delay: 0.9 });
-  debris.push({ svg: D.tabCritter(sky, { x: 330, y: 104, size: 70, rot: -9 }), pull: [-12, -10], bob: [6.5, 0, 5], enter: 'pop', delay: 1.3 });
-  debris.push({ svg: D.note(ts, { x: 935, y: 508, text: 'one more idea…', size: 28, rot: -5, fill: t.accentHi, underline: true }), pull: [14, 16], bob: [7.6, 0.2, 3], enter: 'fade', delay: 1.4 });
-  debris.push({ svg: D.hook(sky, { x: 905, y: 466, size: 50, rot: -6, sw: 3 }, t.accentHi), pull: [12, 12], bob: [7.6, 0.2, 3], enter: 'fade', delay: 1.4 });
-  // cameo: Clawd riding the notification pill
-  debris.push({ svg: D.cameo(sky, 196, 368, 44), pull: [-12, 8], bob: [5.8, 0.4, 4], op: 0.95, enter: 'pop', delay: 1.6 });
-  debris.push({ svg: D.crown(sky, { x: 780, y: 92, size: 44, rot: 14, sw: 2.8 }), pull: [10, -12], bob: [8.4, 1.5, 4], enter: 'pop', delay: 1.1 });
-  debris.push({ svg: D.sparkle(sky, { x: 452, y: 82, size: 28, sw: 2.2 }), pull: [-10, -10], bob: [5.2, 0.6, 3], enter: 'pop', delay: 1.2 });
+  // loose sheets drifting about the window
+  debris.push({ svg: D.flyer({ x: 1060, y: 470, size: 24, rot: -10, d: 7.5 }), pull: [0, 0], bob: [6, 0, 3], op: 0.9, enter: 'fade', delay: 1.2 });
+  // a paperclip on the sticky note
+  if (extras.quote) debris.push({ svg: D.paperclip(204, 52, 12, '#c9ccd1', 1.1), pull: [-16, -10], bob: [8.4, 0.4, 3], op: 0.96, enter: 'fade', delay: 1 });
   debris.push({ svg: D.sparkle(sky, { x: 1120, y: 250, size: 22, sw: 2 }), pull: [10, 8], bob: [6.1, 0.9, 3], enter: 'pop', delay: 1.25 });
-  debris.push({ svg: D.sparkle(sky, { x: 66, y: 300, size: 20, sw: 2 }), pull: [-10, 0], bob: [5.5, 0.3, 3], enter: 'pop', delay: 1.35 });
 
   debris.forEach((d, i) => {
     kf(`rc${i}`, `from{opacity:1;transform:translate(${n(d.pull[0])}px,${n(d.pull[1])}px)}`);
